@@ -25,6 +25,7 @@
 		453B48071505A96200D94EE3 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B47E01505A96200D94EE3 /* CoreData.framework */; };
 		453B480F1505A96200D94EE3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 453B480D1505A96200D94EE3 /* InfoPlist.strings */; };
 		453B48121505A96200D94EE3 /* EnveloperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 453B48111505A96200D94EE3 /* EnveloperTests.m */; };
+		83CC40C8150C1DFF00BCB0F3 /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CC40C7150C1DFF00BCB0F3 /* PaintView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,25 +44,27 @@
 		453B47DC1505A96200D94EE3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		453B47DE1505A96200D94EE3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		453B47E01505A96200D94EE3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		453B47E41505A96200D94EE3 /* Enveloper-Info.plist */ = {isa = PBXFileReference; path = "Enveloper-Info.plist"; sourceTree = "<group>"; };
+		453B47E41505A96200D94EE3 /* Enveloper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Enveloper-Info.plist"; sourceTree = "<group>"; };
 		453B47E61505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		453B47E81505A96200D94EE3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		453B47EA1505A96200D94EE3 /* Enveloper-Prefix.pch */ = {isa = PBXFileReference; path = "Enveloper-Prefix.pch"; sourceTree = "<group>"; };
-		453B47EB1505A96200D94EE3 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		453B47EA1505A96200D94EE3 /* Enveloper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Enveloper-Prefix.pch"; sourceTree = "<group>"; };
+		453B47EB1505A96200D94EE3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		453B47EC1505A96200D94EE3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		453B47EF1505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		453B47F21505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		453B47F51505A96200D94EE3 /* Enveloper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Enveloper.xcdatamodel; sourceTree = "<group>"; };
-		453B47F71505A96200D94EE3 /* MasterViewController.h */ = {isa = PBXFileReference; path = MasterViewController.h; sourceTree = "<group>"; };
+		453B47F71505A96200D94EE3 /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		453B47F81505A96200D94EE3 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		453B47FA1505A96200D94EE3 /* DetailViewController.h */ = {isa = PBXFileReference; path = DetailViewController.h; sourceTree = "<group>"; };
+		453B47FA1505A96200D94EE3 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		453B47FB1505A96200D94EE3 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		453B48021505A96200D94EE3 /* EnveloperTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EnveloperTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		453B48031505A96200D94EE3 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		453B480C1505A96200D94EE3 /* EnveloperTests-Info.plist */ = {isa = PBXFileReference; path = "EnveloperTests-Info.plist"; sourceTree = "<group>"; };
+		453B480C1505A96200D94EE3 /* EnveloperTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EnveloperTests-Info.plist"; sourceTree = "<group>"; };
 		453B480E1505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		453B48101505A96200D94EE3 /* EnveloperTests.h */ = {isa = PBXFileReference; path = EnveloperTests.h; sourceTree = "<group>"; };
+		453B48101505A96200D94EE3 /* EnveloperTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnveloperTests.h; sourceTree = "<group>"; };
 		453B48111505A96200D94EE3 /* EnveloperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnveloperTests.m; sourceTree = "<group>"; };
+		83CC40C6150C1DFF00BCB0F3 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaintView.h; path = Enveloper/PaintView.h; sourceTree = SOURCE_ROOT; };
+		83CC40C7150C1DFF00BCB0F3 /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaintView.m; path = Enveloper/PaintView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,7 @@
 				453B47F81505A96200D94EE3 /* MasterViewController.m */,
 				453B47FA1505A96200D94EE3 /* DetailViewController.h */,
 				453B47FB1505A96200D94EE3 /* DetailViewController.m */,
+				83CC40CA150C1E2200BCB0F3 /* Paint */,
 				453B47F41505A96200D94EE3 /* Enveloper.xcdatamodeld */,
 				453B47E31505A96200D94EE3 /* Supporting Files */,
 			);
@@ -166,6 +170,15 @@
 				453B480D1505A96200D94EE3 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		83CC40CA150C1E2200BCB0F3 /* Paint */ = {
+			isa = PBXGroup;
+			children = (
+				83CC40C6150C1DFF00BCB0F3 /* PaintView.h */,
+				83CC40C7150C1DFF00BCB0F3 /* PaintView.m */,
+			);
+			path = Paint;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,6 +293,7 @@
 				453B47F61505A96200D94EE3 /* Enveloper.xcdatamodeld in Sources */,
 				453B47F91505A96200D94EE3 /* MasterViewController.m in Sources */,
 				453B47FC1505A96200D94EE3 /* DetailViewController.m in Sources */,
+				83CC40C8150C1DFF00BCB0F3 /* PaintView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +473,7 @@
 				453B48171505A96200D94EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		453B48181505A96200D94EE3 /* Build configuration list for PBXNativeTarget "EnveloperTests" */ = {
 			isa = XCConfigurationList;
@@ -467,6 +482,7 @@
 				453B481A1505A96200D94EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

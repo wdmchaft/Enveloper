@@ -8,13 +8,27 @@
 
 #import <UIKit/UIKit.h>
 
+@class MasterViewController;
+@class DetailViewController;
+@class PGMidi;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
+{
+    UIWindow                  *window;
+    DetailViewController      *detailViewController;
+    MasterViewController      *masterViewController;
+    PGMidi                    *midi;
+}
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
+@property (nonatomic, retain) IBOutlet MasterViewController *masterViewController;
+
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

@@ -10,7 +10,7 @@
 
 #import "DetailViewController.h"
 
-@interface MasterViewController ()
+@interface MasterViewController () 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
@@ -19,6 +19,7 @@
 @synthesize detailViewController = _detailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
+
 
 - (void)awakeFromNib
 {

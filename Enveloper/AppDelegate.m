@@ -9,16 +9,27 @@
 #import "AppDelegate.h"
 
 #import "MasterViewController.h"
+#import "DetailViewController.h"
+#import "PGMidi.h"
+#import "iOSVersionDetection.h"
+#import "PGArc.h"
 
-@implementation AppDelegate
+@implementation AppDelegate 
 
 @synthesize window = _window;
+@synthesize detailViewController = _detailViewController;
+@synthesize masterViewController = _masterViewController;
+
+
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+     masterViewController = [ MasterViewController alloc];
+
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
@@ -26,16 +37,20 @@
         splitViewController.delegate = (id)navigationController.topViewController;
         
         UINavigationController *masterNavigationController = [splitViewController.viewControllers objectAtIndex:0];
-        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
+        
+        masterViewController = (MasterViewController *)masterNavigationController.topViewController;
+        masterViewController.managedObjectContext = self.managedObjectContext;
+        
     } else {
         UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
+        masterViewController = (MasterViewController *)navigationController.topViewController;
+        masterViewController.managedObjectContext = self.managedObjectContext;
     }
+
+    
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -183,6 +198,16 @@
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+
+- (void)dealloc
+{
+#if ! PGMIDI_ARC
+    [viewController release];
+    [window release];
+    [super dealloc];
+#endif
 }
 
 @end

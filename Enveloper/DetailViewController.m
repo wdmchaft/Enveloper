@@ -8,17 +8,32 @@
 
 #import "DetailViewController.h"
 
-@interface DetailViewController ()
+@interface DetailViewController ()  <PGMidiDelegate, PGMidiSourceDelegate>
+- (void) updateCountLabel;
+- (void) addString:(NSString*)string;
+- (void) sendMidiDataInBackground;
+
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
 @end
 
 @implementation DetailViewController
 
+#pragma mark PGMidiDelegate
+@synthesize countLabel;
+@synthesize textView;
+@synthesize midi;
+
 @synthesize graph = _graph;
+@synthesize tempoLabel = _tempoLabel;
+@synthesize tempoStepper;
+@synthesize channelLabel = _channelLabel;
+@synthesize channelStepper;
+@synthesize slidr = _slidr;
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
 @synthesize masterPopoverController = _masterPopoverController;
+
 
 #pragma mark - Managing the detail item
 
@@ -59,6 +74,20 @@
 	// Do any additional setup after loading the view, typically from a nib.
     PaintView *paint = [[PaintView alloc] initWithFrame:_graph.bounds];
     [_graph addSubview:paint];
+    
+    IF_IOS_HAS_COREMIDI
+    (
+     // We only create a MidiInput object on iOS versions that support CoreMIDI
+     midi = [[PGMidi alloc] init];
+     [midi enableNetwork:YES];
+     self.midi = midi;
+
+     )
+    
+    channel = 1;
+    tempo = 120;
+    tempoStepper.value = tempo;
+    
     [self configureView];
 }
 
@@ -72,6 +101,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -82,6 +112,18 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    
+    [self clearTextView];
+    [self updateCountLabel];
+    
+    IF_IOS_HAS_COREMIDI
+    (
+     [self addString:@"This iOS Version supports CoreMIDI"];
+     )
+    else
+    {
+        [self addString:@"You are running iOS before 4.2. CoreMIDI is not supported."];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -114,5 +156,300 @@
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
     self.masterPopoverController = nil;
 }
+
+#pragma mark IBActions
+
+- (IBAction) clearTextView
+{
+    textView.text = nil;
+}
+
+-(const char *)ToStringFromBool:(BOOL) b { return b ? "yes":"no"; }
+
+-(NSString *)ToString:(PGMidiConnection *) connection
+{
+    return [NSString stringWithFormat:@"< PGMidiConnection: name=%@ isNetwork=%s >",
+            connection.name, [self ToStringFromBool: connection.isNetworkSession]];
+}
+- (IBAction) listAllInterfaces
+{
+    IF_IOS_HAS_COREMIDI
+    ({
+        [self addString:@"\n\nInterface list:"];
+        for (PGMidiSource *source in midi.sources)
+        {
+            NSString *description = [NSString stringWithFormat:@"Source: %@", [self ToString:source]];
+            [self addString:description];
+        }
+        [self addString:@""];
+        for (PGMidiDestination *destination in midi.destinations)
+        {
+            NSString *description = [NSString stringWithFormat:@"Destination: %@", [self ToString:destination]];
+            [self addString:description];
+        }
+    })
+}
+
+- (IBAction) sendMidiData
+{
+    [self performSelectorInBackground:@selector(sendMidiDataInBackground) withObject:nil];
+    NSLog(@"MIDI SENT");
+}
+
+#pragma mark Shenanigans
+
+- (void) attachToAllExistingSources
+{
+    for (PGMidiSource *source in midi.sources)
+    {
+        source.delegate = self;
+    }
+}
+
+- (void) setMidi:(PGMidi*)m
+{
+    midi.delegate = nil;
+    midi = m;
+    midi.delegate = self;
+    
+    [self attachToAllExistingSources];
+}
+
+- (void) addString:(NSString*)string
+{
+    NSString *newText = [textView.text stringByAppendingFormat:@"\n%@", string];
+    textView.text = newText;
+    
+    if (newText.length)
+        [textView scrollRangeToVisible:(NSRange){newText.length-1, 1}];
+}
+
+- (void) updateCountLabel
+{
+    countLabel.text = [NSString stringWithFormat:@"sources=%u destinations=%u", midi.sources.count, midi.destinations.count];
+}
+
+- (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
+{
+    source.delegate = self;
+    [self updateCountLabel];
+    [self addString:[NSString stringWithFormat:@"Source added: %@", [self ToString:source]]];
+}
+
+- (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
+{
+    [self updateCountLabel];
+    [self addString:[NSString stringWithFormat:@"Source removed: %@", [self ToString:source]]];
+}
+
+- (void) midi:(PGMidi*)midi destinationAdded:(PGMidiDestination *)destination
+{
+    [self updateCountLabel];
+    [self addString:[NSString stringWithFormat:@"Desintation added: %@", [self ToString:destination]]];
+}
+
+- (void) midi:(PGMidi*)midi destinationRemoved:(PGMidiDestination *)destination
+{
+    [self updateCountLabel];
+    [self addString:[NSString stringWithFormat:@"Desintation removed: %@", [self ToString:destination]]];
+}
+
+-(NSString *)StringFromPacket:(const MIDIPacket *)packet
+{
+    // Note - this is not an example of MIDI parsing. I'm just dumping
+    // some bytes for diagnostics.
+    // See comments in PGMidiSourceDelegate for an example of how to
+    // interpret the MIDIPacket structure.
+    return [NSString stringWithFormat:@"  %u bytes: [%02x,%02x,%02x]",
+            packet->length,
+            (packet->length > 0) ? packet->data[0] : 0,
+            (packet->length > 1) ? packet->data[1] : 0,
+            (packet->length > 2) ? packet->data[2] : 0
+            ];
+}
+
+- (void) midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
+{
+
+    [self performSelectorOnMainThread:@selector(addString:)
+                           withObject:@"MIDI received:"
+                        waitUntilDone:NO];
+   
+    const MIDIPacket *packet = &packetList->packet[0];
+    for (int i = 0; i < packetList->numPackets; ++i)
+    {
+        [self performSelectorOnMainThread:@selector(addString:)
+                               withObject: [self StringFromPacket: packet]
+                            waitUntilDone:NO];
+        packet = MIDIPacketNext(packet);
+    }
+}
+
+- (void) sendMidiDataInBackground
+{
+    for (int n = 0; n < 20; ++n)
+    {
+        const UInt8 note      = n;
+        const UInt8 noteOn[]  = { 0x90 + channel - 1, note, 127 };
+        const UInt8 noteOff[] = { 0x80 + channel - 1, note, 0   };
+        
+        [midi sendBytes:noteOn size:sizeof(noteOn)];
+        [NSThread sleepForTimeInterval:0.1];
+        [midi sendBytes:noteOff size:sizeof(noteOff)];
+    }
+}
+
+- (IBAction) sliderChanged : (id)sender
+{
+    UISlider *slider = (UISlider *)sender;
+    NSInteger sliderVal = (NSInteger) slider.value;
+    [self sendMidiDataFromSlider:sliderVal];
+}
+
+- (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal
+{
+    
+    NSLog(@"%d", sliderVal);
+    const UInt8 note      =  sliderVal;
+    const UInt8 noteOn[]  = { 0x90 + channel - 1, note, 127};
+    const UInt8 noteOff[] = { 0x80 + channel - 1, note, 0   };
+    
+    [midi sendBytes:noteOn size:sizeof(noteOn)];
+    [NSThread sleepForTimeInterval:0.1];
+    [midi sendBytes:noteOff size:sizeof(noteOff)];
+}
+
+-(IBAction) setTempo:(id)sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    tempo = (NSInteger) stepper.value;
+    
+    [_tempoLabel setText:[NSString stringWithFormat:@"%d", tempo]];
+    
+}
+
+-(IBAction) changeChannel:(id)sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    channel = (NSInteger) stepper.value;
+    
+    [_channelLabel setText:[NSString stringWithFormat:@"%d", channel]];
+    
+}
+
+- (IBAction) play{
+    [self performSelectorInBackground:@selector(sendMidiClockInBackground) withObject:nil];
+
+}
+
+- (IBAction) sendMidiClockInBackground
+{
+    //Run this on a background thread
+    playing = true;
+    
+    //Send System Common Song Position Pointer
+    //const UInt8 position[]      = {242,0,0};
+    
+    SInt32 latencyTime;
+    OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
+    
+    NSLog(@"\n\nLatency: %ld, %ld", result, latencyTime);
+    
+    uint64_t onTime = mach_absolute_time() + result;
+    
+    //[midi sendQueuedMidi: position size:sizeof(position) atTime:onTime];    
+    
+    const UInt8 start[]      = {250};
+
+    //[midi sendBytes:start size:sizeof(start)];
+    [midi sendQueuedMidi: start size:sizeof(start) atTime:onTime];
+
+    
+    while(playing)
+    {
+        const UInt8 tick[]      = {248};
+        
+        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time() + result];
+
+        //NSLog(@"\n\nLatency: %llu", mach_absolute_time() + result);
+       
+        //NSLog(@"\n\n\nTempo is:%d", tempo);
+        double timeout = 1.0/((tempo * 24.0) / 60.0);
+         NSLog(@"\n\nTimeout is:%f", timeout);
+        [NSThread sleepForTimeInterval:timeout];
+    }
+}
+
+- (IBAction)stopClock{
+    playing = false;
+    const UInt8 stop[]     = {252};
+    [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];
+}
+
+- (int) getUptimeInMilliseconds
+{
+    const int64_t kOneMillion = 1000 * 1000;
+    static mach_timebase_info_data_t s_timebase_info;
+    
+    if (s_timebase_info.denom == 0) {
+        (void) mach_timebase_info(&s_timebase_info);
+    }
+    
+    // mach_absolute_time() returns billionth of seconds,
+    // so divide by one million to get milliseconds
+    return (int)((mach_absolute_time() * s_timebase_info.numer) / (kOneMillion * s_timebase_info.denom));
+}
+
+- (UInt64) milliToUInt64: (int) machTime
+{
+    const int64_t kOneMillion = 1000 * 1000;
+    static mach_timebase_info_data_t s_timebase_info;
+    
+    if (s_timebase_info.denom == 0) {
+        (void) mach_timebase_info(&s_timebase_info);
+    }
+    
+    // mach_absolute_time() returns billionth of seconds,
+    // so divide by one million to get milliseconds
+    
+    return (UInt64) ((machTime / s_timebase_info.numer) * (kOneMillion * s_timebase_info.denom));
+}
+
+
+-(IBAction) sweepSlide: (id) sender
+{
+    [self performSelectorInBackground:@selector(sendSweepSlide) withObject:sender];
+}
+
+- (IBAction) sendSweepSlide: (id)sender
+{
+    //Run this on a background thread
+    playing = true;
+
+    UISlider *slider = (UISlider *)sender;
+    NSInteger sliderVal = (NSInteger) slider.value;
+
+    SInt32 latencyTime;
+    OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
+    
+    int bit1 = 0xB0 + channel - 1;
+    
+    const UInt8 LSB[]      = {bit1, 99, 2};
+    [midi sendBytes:LSB size:sizeof(LSB)];
+    [NSThread sleepForTimeInterval:0.01];
+
+    const UInt8 MSB[]      = {bit1, 98, 2};
+    [midi sendBytes:MSB size:sizeof(MSB)];
+    [NSThread sleepForTimeInterval:0.01];
+
+    const UInt8 Data[]      = {bit1, 6, sliderVal};
+    //[midi sendQueuedMidi:Data size:sizeof(Data) atTime:mach_absolute_time() + result];
+    [midi sendBytes:Data size:sizeof(Data)];
+
+
+ }
+
+
+
 
 @end

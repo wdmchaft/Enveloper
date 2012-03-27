@@ -25,6 +25,10 @@
 		453B48071505A96200D94EE3 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B47E01505A96200D94EE3 /* CoreData.framework */; };
 		453B480F1505A96200D94EE3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 453B480D1505A96200D94EE3 /* InfoPlist.strings */; };
 		453B48121505A96200D94EE3 /* EnveloperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 453B48111505A96200D94EE3 /* EnveloperTests.m */; };
+		45EB248E150C22E100CFE4E0 /* PGMidi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45EB2489150C22E100CFE4E0 /* PGMidi.mm */; };
+		45EB248F150C22E100CFE4E0 /* PGMidiAllSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45EB248B150C22E100CFE4E0 /* PGMidiAllSources.mm */; };
+		45EB2490150C22E100CFE4E0 /* PGMidiFind.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45EB248D150C22E100CFE4E0 /* PGMidiFind.mm */; };
+		45EB2493150C240D00CFE4E0 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45EB2492150C240D00CFE4E0 /* CoreMIDI.framework */; };
 		83CC40C8150C1DFF00BCB0F3 /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CC40C7150C1DFF00BCB0F3 /* PaintView.m */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +67,15 @@
 		453B480E1505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		453B48101505A96200D94EE3 /* EnveloperTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnveloperTests.h; sourceTree = "<group>"; };
 		453B48111505A96200D94EE3 /* EnveloperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnveloperTests.m; sourceTree = "<group>"; };
+		45EB2486150C22E100CFE4E0 /* iOSVersionDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSVersionDetection.h; sourceTree = "<group>"; };
+		45EB2487150C22E100CFE4E0 /* PGArc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGArc.h; sourceTree = "<group>"; };
+		45EB2488150C22E100CFE4E0 /* PGMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGMidi.h; sourceTree = "<group>"; };
+		45EB2489150C22E100CFE4E0 /* PGMidi.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PGMidi.mm; sourceTree = "<group>"; };
+		45EB248A150C22E100CFE4E0 /* PGMidiAllSources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGMidiAllSources.h; sourceTree = "<group>"; };
+		45EB248B150C22E100CFE4E0 /* PGMidiAllSources.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PGMidiAllSources.mm; sourceTree = "<group>"; };
+		45EB248C150C22E100CFE4E0 /* PGMidiFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGMidiFind.h; sourceTree = "<group>"; };
+		45EB248D150C22E100CFE4E0 /* PGMidiFind.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PGMidiFind.mm; sourceTree = "<group>"; };
+		45EB2492150C240D00CFE4E0 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		83CC40C6150C1DFF00BCB0F3 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaintView.h; path = Enveloper/PaintView.h; sourceTree = SOURCE_ROOT; };
 		83CC40C7150C1DFF00BCB0F3 /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaintView.m; path = Enveloper/PaintView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -72,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45EB2493150C240D00CFE4E0 /* CoreMIDI.framework in Frameworks */,
 				453B47DB1505A96200D94EE3 /* UIKit.framework in Frameworks */,
 				453B47DD1505A96200D94EE3 /* Foundation.framework in Frameworks */,
 				453B47DF1505A96200D94EE3 /* CoreGraphics.framework in Frameworks */,
@@ -115,6 +129,7 @@
 		453B47D91505A96100D94EE3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45EB2492150C240D00CFE4E0 /* CoreMIDI.framework */,
 				453B47DA1505A96200D94EE3 /* UIKit.framework */,
 				453B47DC1505A96200D94EE3 /* Foundation.framework */,
 				453B47DE1505A96200D94EE3 /* CoreGraphics.framework */,
@@ -135,6 +150,7 @@
 				453B47F81505A96200D94EE3 /* MasterViewController.m */,
 				453B47FA1505A96200D94EE3 /* DetailViewController.h */,
 				453B47FB1505A96200D94EE3 /* DetailViewController.m */,
+				45EB2485150C22E100CFE4E0 /* PGMidi */,
 				83CC40CA150C1E2200BCB0F3 /* Paint */,
 				453B47F41505A96200D94EE3 /* Enveloper.xcdatamodeld */,
 				453B47E31505A96200D94EE3 /* Supporting Files */,
@@ -170,6 +186,21 @@
 				453B480D1505A96200D94EE3 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		45EB2485150C22E100CFE4E0 /* PGMidi */ = {
+			isa = PBXGroup;
+			children = (
+				45EB2486150C22E100CFE4E0 /* iOSVersionDetection.h */,
+				45EB2487150C22E100CFE4E0 /* PGArc.h */,
+				45EB2488150C22E100CFE4E0 /* PGMidi.h */,
+				45EB2489150C22E100CFE4E0 /* PGMidi.mm */,
+				45EB248A150C22E100CFE4E0 /* PGMidiAllSources.h */,
+				45EB248B150C22E100CFE4E0 /* PGMidiAllSources.mm */,
+				45EB248C150C22E100CFE4E0 /* PGMidiFind.h */,
+				45EB248D150C22E100CFE4E0 /* PGMidiFind.mm */,
+			);
+			path = PGMidi;
 			sourceTree = "<group>";
 		};
 		83CC40CA150C1E2200BCB0F3 /* Paint */ = {
@@ -294,6 +325,9 @@
 				453B47F91505A96200D94EE3 /* MasterViewController.m in Sources */,
 				453B47FC1505A96200D94EE3 /* DetailViewController.m in Sources */,
 				83CC40C8150C1DFF00BCB0F3 /* PaintView.m in Sources */,
+				45EB248E150C22E100CFE4E0 /* PGMidi.mm in Sources */,
+				45EB248F150C22E100CFE4E0 /* PGMidiAllSources.mm in Sources */,
+				45EB2490150C22E100CFE4E0 /* PGMidiFind.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

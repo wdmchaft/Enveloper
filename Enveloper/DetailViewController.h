@@ -23,6 +23,10 @@
     Boolean playing;
     NSInteger tempo;
     NSInteger channel;
+    NSInteger LSB;
+    NSInteger MSB;
+    NSInteger loadCount;
+    
     PGMidi *midi;
 }
 #if ! __has_feature(objc_arc)
@@ -49,8 +53,6 @@
 - (const char *) ToStringFromBool:(BOOL) b;
 - (NSString*) ToString:(PGMidiConnection*) connection;
 - (NSString *)StringFromPacket:(const MIDIPacket *)packet;
-- (UInt64) milliToUInt64: (int) machTime;
-- (int) getUptimeInMilliseconds;
 
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) IBOutlet UIView *graph;
@@ -60,9 +62,15 @@
 @property (strong, nonatomic) IBOutlet UILabel *tempoLabel;
 @property (strong, nonatomic) IBOutlet UIStepper *channelStepper;
 @property (strong, nonatomic) IBOutlet UILabel *channelLabel;
-
+@property (strong, nonatomic) IBOutlet UIStepper *LSBStepper;
+@property (strong, nonatomic) IBOutlet UILabel *LSBLabel;
+@property (strong, nonatomic) IBOutlet UIStepper *MSBStepper;
+@property (strong, nonatomic) IBOutlet UILabel *MSBLabel;
+@property (strong, nonatomic) IBOutlet UISwitch *holdSwitch;
 
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;
 - (IBAction) changeChannel : (id)sender;
+-(IBAction) changeLSB:(id)sender;
+-(IBAction) changeMSB:(id)sender;
 @end

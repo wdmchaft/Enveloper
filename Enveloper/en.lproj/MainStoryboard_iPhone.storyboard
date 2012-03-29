@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="11C74" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="10K549" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
     <dependencies>
         <development defaultVersion="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="933"/>
@@ -72,7 +72,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="PEd-1T-fbr">
-                                <rect key="frame" x="20" y="11" width="112" height="73"/>
+                                <rect key="frame" x="20" y="11" width="112" height="118"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.375" green="0.75" blue="0.75" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -120,7 +120,7 @@
                                 <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" id="iOj-EA-lwh">
-                                <rect key="frame" x="138" y="11" width="177" height="73"/>
+                                <rect key="frame" x="138" y="11" width="177" height="54"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -129,7 +129,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="QjX-iN-bfy">
-                                <rect key="frame" x="20" y="133" width="72" height="37"/>
+                                <rect key="frame" x="20" y="139" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Play">
@@ -144,7 +144,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="w8F-NO-Lra">
-                                <rect key="frame" x="20" y="189" width="72" height="37"/>
+                                <rect key="frame" x="20" y="195" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Stop">
@@ -159,42 +159,98 @@
                                 </connections>
                             </button>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minimumValue="20" maximumValue="300" id="Cgu-ec-g19">
-                                <rect key="frame" x="202" y="133" width="94" height="27"/>
+                                <rect key="frame" x="138" y="102" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="setTempo:" destination="21" eventType="valueChanged" id="glP-mK-lfY"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="120" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="mxf-32-Fhk">
-                                <rect key="frame" x="258" y="104" width="38" height="21"/>
+                                <rect key="frame" x="194" y="73" width="38" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tempo:" lineBreakMode="tailTruncation" minimumFontSize="14" id="qCG-Dp-Nju">
-                                <rect key="frame" x="202" y="104" width="60" height="21"/>
+                                <rect key="frame" x="138" y="73" width="60" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="16" id="0Ag-Wz-pvF">
-                                <rect key="frame" x="202" y="218" width="94" height="27"/>
+                                <rect key="frame" x="138" y="168" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeChannel:" destination="21" eventType="valueChanged" id="1ET-Fk-aG8"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="X1F-wz-bDr">
-                                <rect key="frame" x="263" y="189" width="33" height="21"/>
+                                <rect key="frame" x="199" y="139" width="33" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Channel:" lineBreakMode="tailTruncation" minimumFontSize="14" id="TaE-t7-5DO">
-                                <rect key="frame" x="202" y="189" width="69" height="21"/>
+                                <rect key="frame" x="138" y="139" width="69" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2" maximumValue="127" id="lgx-pw-vic">
+                                <rect key="frame" x="20" y="269" width="94" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="changeLSB:" destination="21" eventType="valueChanged" id="GGs-2E-wWO"/>
+                                </connections>
+                            </stepper>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="iWE-jj-9ns">
+                                <rect key="frame" x="81" y="240" width="33" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="LSB:" lineBreakMode="tailTruncation" minimumFontSize="14" id="0S8-OE-m0D">
+                                <rect key="frame" x="20" y="240" width="69" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2" maximumValue="127" id="YQc-hg-J9M">
+                                <rect key="frame" x="138" y="269" width="94" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="changeMSB:" destination="21" eventType="valueChanged" id="Xr5-ol-kRG"/>
+                                </connections>
+                            </stepper>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="ACA-0O-cW0">
+                                <rect key="frame" x="199" y="240" width="33" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="MSB:" lineBreakMode="tailTruncation" minimumFontSize="14" id="GJD-B8-PAz">
+                                <rect key="frame" x="138" y="240" width="69" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="qpV-t8-KdD">
+                                <rect key="frame" x="241" y="269" width="79" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="toggleHold:" destination="21" eventType="valueChanged" id="UH3-W6-5pJ"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Hold" lineBreakMode="tailTruncation" minimumFontSize="10" id="Xcm-2Q-WQL">
+                                <rect key="frame" x="258" y="240" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -204,10 +260,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="26"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
+                        <outlet property="LSBLabel" destination="iWE-jj-9ns" id="swk-x1-ypf"/>
+                        <outlet property="LSBStepper" destination="lgx-pw-vic" id="t8o-yT-RJA"/>
+                        <outlet property="MSBLabel" destination="ACA-0O-cW0" id="Q7P-C6-U4L"/>
+                        <outlet property="MSBStepper" destination="YQc-hg-J9M" id="CLk-DZ-Q9u"/>
                         <outlet property="channelLabel" destination="X1F-wz-bDr" id="Hfs-Yq-XTI"/>
                         <outlet property="channelStepper" destination="0Ag-Wz-pvF" id="JFd-v0-BQy"/>
+                        <outlet property="countLabel" destination="amj-yE-GmS" id="U8M-Qr-XhA"/>
                         <outlet property="graph" destination="PEd-1T-fbr" id="EkT-zr-OIR"/>
+                        <outlet property="holdSwitch" destination="qpV-t8-KdD" id="5FR-46-LG0"/>
                         <outlet property="slidr" destination="dZF-7b-bv7" id="fhh-ev-3qX"/>
                         <outlet property="tempoLabel" destination="mxf-32-Fhk" id="hw4-aG-ZOu"/>
                         <outlet property="tempoStepper" destination="Cgu-ec-g19" id="y5z-bs-Kfm"/>
@@ -223,17 +286,24 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DetailViewController.h"/>
             <relationships>
                 <relationship kind="action" name="changeChannel:"/>
+                <relationship kind="action" name="changeLSB:"/>
+                <relationship kind="action" name="changeMSB:"/>
                 <relationship kind="action" name="clearTextView"/>
                 <relationship kind="action" name="listAllInterfaces"/>
                 <relationship kind="action" name="sendMidiData"/>
                 <relationship kind="action" name="sendMidiDataFromSlider:"/>
                 <relationship kind="action" name="setTempo:"/>
                 <relationship kind="action" name="sliderChanged:"/>
+                <relationship kind="outlet" name="LSBLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="LSBStepper" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="MSBLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="MSBStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="channelLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="channelStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="detailDescriptionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="graph" candidateClass="UIView"/>
+                <relationship kind="outlet" name="holdSwitch" candidateClass="UISwitch"/>
                 <relationship kind="outlet" name="slidr" candidateClass="UISlider"/>
                 <relationship kind="outlet" name="tempoLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="tempoStepper" candidateClass="UIStepper"/>

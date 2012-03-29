@@ -123,11 +123,8 @@ BOOL IsNetworkSession(MIDIEndpointRef ref)
 static
 void PGMIDIReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
 {
-    //PGMidiSource *self = arc_cast<PGMidiSource>(srcConnRefCon);
-    //[self midiRead:pktlist];
-    @autoreleasepool {
-        [arc_cast<PGMidiSource>(srcConnRefCon) midiRead:pktlist];
-    }
+    PGMidiSource *self = arc_cast<PGMidiSource>(srcConnRefCon);
+    [self midiRead:pktlist];
 }
 
 @end

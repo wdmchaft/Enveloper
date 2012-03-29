@@ -25,10 +25,15 @@
 @synthesize midi;
 
 @synthesize graph = _graph;
+@synthesize holdSwitch = _holdSwitch;
 @synthesize tempoLabel = _tempoLabel;
 @synthesize tempoStepper;
 @synthesize channelLabel = _channelLabel;
 @synthesize channelStepper;
+@synthesize LSBLabel;
+@synthesize LSBStepper;
+@synthesize MSBLabel;
+@synthesize MSBStepper;
 @synthesize slidr = _slidr;
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
@@ -54,7 +59,11 @@
 - (void)configureView
 {
     // Update the user interface for the detail item.
-
+    channel = 1;
+    tempo = 120;
+    tempoStepper.value = tempo;
+    LSB = 2;
+    MSB = 2;
     if (self.detailItem) {
         self.detailDescriptionLabel.text = [self.detailItem description];
     }
@@ -83,10 +92,6 @@
      self.midi = midi;
 
      )
-    
-    channel = 1;
-    tempo = 120;
-    tempoStepper.value = tempo;
     
     [self configureView];
 }
@@ -133,12 +138,16 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    
+    return NO;
+    
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
-        return YES;
+        return NO;
     }
+     
 }
 
 #pragma mark - Split view
@@ -268,19 +277,64 @@
             ];
 }
 
-- (void) midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
+-(NSInteger)IntFromPacket:(const MIDIPacket *)packet withIndex:(NSInteger)index
 {
+    // Note - this is not an example of MIDI parsing. I'm just dumping
+    // some bytes for diagnostics.
+    // See comments in PGMidiSourceDelegate for an example of how to
+    // interpret the MIDIPacket structure.
+    return (packet->length > index) ? packet->data[index] : 0;
+}
 
+- (void)midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
+{
+/*
     [self performSelectorOnMainThread:@selector(addString:)
                            withObject:@"MIDI received:"
                         waitUntilDone:NO];
-   
+   */
     const MIDIPacket *packet = &packetList->packet[0];
     for (int i = 0; i < packetList->numPackets; ++i)
     {
-        [self performSelectorOnMainThread:@selector(addString:)
+   /*    [self performSelectorOnMainThread:@selector(addString:)
                                withObject: [self StringFromPacket: packet]
                             waitUntilDone:NO];
+     */   
+        
+        /* Set LSB and MSB to non-time clock or noteOn/Off start/stop signals */
+        NSLog(@"midi received");
+        if(![_holdSwitch isOn]){
+            NSString * packetString = [self StringFromPacket:packet];
+            if( [self IntFromPacket:packet withIndex:0] != 0xF8){                
+                //NSLog(@"\n\nMIDI PACKET: %@", packetString);
+                
+                if( [self IntFromPacket:packet withIndex:1] == 98){
+                    LSB = [self IntFromPacket:packet withIndex:2];
+                    [LSBStepper setValue:LSB];
+                    [LSBLabel performSelectorOnMainThread:@selector(setText:)
+                                               withObject: [NSString stringWithFormat:@"%d", LSB]
+                                            waitUntilDone:NO];
+                    NSLog(@"\n\nMIDI PACKET: %@, LSB: %d", packetString, LSB);
+
+                }
+                else if( [self IntFromPacket:packet withIndex:1] == 99){
+                    MSB = [self IntFromPacket:packet withIndex:2];
+                    [MSBStepper setValue:MSB];
+                    [MSBLabel performSelectorOnMainThread:@selector(setText:)
+                                           withObject: [NSString stringWithFormat:@"%d", MSB]
+                                        waitUntilDone:NO];
+                    NSLog(@"\n\nMIDI PACKET: %@, MSB: %d", packetString, MSB);
+                }
+                else if( [self IntFromPacket:packet withIndex:1] == 6){
+                    int sliderVal = [self IntFromPacket:packet withIndex:2];
+                    //[_slidr setValue:sliderVal];
+                    NSLog(@"\n\nMIDI PACKET: %@, Data: %d", packetString, sliderVal);
+                }
+
+            }
+        }
+        
+        /*Make function to calculate tempo */
         packet = MIDIPacketNext(packet);
     }
 }
@@ -337,6 +391,30 @@
     
 }
 
+-(IBAction) changeLSB:(id)sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    LSB = (NSInteger) stepper.value;
+    
+    [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
+    
+}
+
+-(IBAction) changeMSB:(id)sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    MSB = (NSInteger) stepper.value;
+    
+    [MSBLabel setText:[NSString stringWithFormat:@"%d", MSB]];
+    
+}
+           
+-(IBAction) toggleHold:(id)sender
+{
+    UISwitch * theSwitch = (UISwitch *)sender;
+    _holdSwitch.on = theSwitch.on;
+}
+
 - (IBAction) play{
     [self performSelectorInBackground:@selector(sendMidiClockInBackground) withObject:nil];
 
@@ -374,8 +452,8 @@
         //NSLog(@"\n\nLatency: %llu", mach_absolute_time() + result);
        
         //NSLog(@"\n\n\nTempo is:%d", tempo);
-        double timeout = 1.0/((tempo * 24.0) / 60.0);
-         NSLog(@"\n\nTimeout is:%f", timeout);
+        double timeout = 1.0/((tempo * 24) / 60.0);
+        //NSLog(@"\n\nTimeout is:%f", timeout);
         [NSThread sleepForTimeInterval:timeout];
     }
 }
@@ -385,36 +463,6 @@
     const UInt8 stop[]     = {252};
     [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];
 }
-
-- (int) getUptimeInMilliseconds
-{
-    const int64_t kOneMillion = 1000 * 1000;
-    static mach_timebase_info_data_t s_timebase_info;
-    
-    if (s_timebase_info.denom == 0) {
-        (void) mach_timebase_info(&s_timebase_info);
-    }
-    
-    // mach_absolute_time() returns billionth of seconds,
-    // so divide by one million to get milliseconds
-    return (int)((mach_absolute_time() * s_timebase_info.numer) / (kOneMillion * s_timebase_info.denom));
-}
-
-- (UInt64) milliToUInt64: (int) machTime
-{
-    const int64_t kOneMillion = 1000 * 1000;
-    static mach_timebase_info_data_t s_timebase_info;
-    
-    if (s_timebase_info.denom == 0) {
-        (void) mach_timebase_info(&s_timebase_info);
-    }
-    
-    // mach_absolute_time() returns billionth of seconds,
-    // so divide by one million to get milliseconds
-    
-    return (UInt64) ((machTime / s_timebase_info.numer) * (kOneMillion * s_timebase_info.denom));
-}
-
 
 -(IBAction) sweepSlide: (id) sender
 {
@@ -429,22 +477,20 @@
     UISlider *slider = (UISlider *)sender;
     NSInteger sliderVal = (NSInteger) slider.value;
 
-    SInt32 latencyTime;
-    OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
-    
     int bit1 = 0xB0 + channel - 1;
     
-    const UInt8 LSB[]      = {bit1, 99, 2};
-    [midi sendBytes:LSB size:sizeof(LSB)];
+    const UInt8 LSBPacket[]      = {bit1, 98, LSB};
+    [midi sendBytes:LSBPacket size:sizeof(LSBPacket)];
     [NSThread sleepForTimeInterval:0.01];
 
-    const UInt8 MSB[]      = {bit1, 98, 2};
-    [midi sendBytes:MSB size:sizeof(MSB)];
+    const UInt8 MSBPacket[]      = {bit1, 99, MSB};
+    [midi sendBytes:MSBPacket size:sizeof(MSBPacket)];
     [NSThread sleepForTimeInterval:0.01];
 
     const UInt8 Data[]      = {bit1, 6, sliderVal};
-    //[midi sendQueuedMidi:Data size:sizeof(Data) atTime:mach_absolute_time() + result];
     [midi sendBytes:Data size:sizeof(Data)];
+    
+    NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
 
 
  }

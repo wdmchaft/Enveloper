@@ -67,10 +67,13 @@
 @property (strong, nonatomic) IBOutlet UIStepper *MSBStepper;
 @property (strong, nonatomic) IBOutlet UILabel *MSBLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *holdSwitch;
+@property (strong, nonatomic) NSTimer * theTimer;
 
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;
 - (IBAction) changeChannel : (id)sender;
 -(IBAction) changeLSB:(id)sender;
 -(IBAction) changeMSB:(id)sender;
+- (void)sendClockTick;
+- (void) sendMidiClockInBG;
 @end

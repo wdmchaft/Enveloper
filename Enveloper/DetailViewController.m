@@ -38,6 +38,7 @@
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
 @synthesize masterPopoverController = _masterPopoverController;
+@synthesize theTimer;
 
 
 #pragma mark - Managing the detail item
@@ -139,13 +140,13 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     
-    return NO;
+    //return NO;
     
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
-        return NO;
+        return YES;
     }
      
 }
@@ -302,13 +303,13 @@
      */   
         
         /* Set LSB and MSB to non-time clock or noteOn/Off start/stop signals */
-        NSLog(@"midi received");
+        //NSLog(@"midi received");
         if(![_holdSwitch isOn]){
             NSString * packetString = [self StringFromPacket:packet];
             if( [self IntFromPacket:packet withIndex:0] != 0xF8){                
                 //NSLog(@"\n\nMIDI PACKET: %@", packetString);
                 
-                if( [self IntFromPacket:packet withIndex:1] == 98){
+                if( [self IntFromPacket:packet withIndex:1] == 98 && [self IntFromPacket:packet withIndex:2] != 100){
                     LSB = [self IntFromPacket:packet withIndex:2];
                     [LSBStepper setValue:LSB];
                     [LSBLabel performSelectorOnMainThread:@selector(setText:)
@@ -325,6 +326,7 @@
                                         waitUntilDone:NO];
                     NSLog(@"\n\nMIDI PACKET: %@, MSB: %d", packetString, MSB);
                 }
+                //else {
                 else if( [self IntFromPacket:packet withIndex:1] == 6){
                     int sliderVal = [self IntFromPacket:packet withIndex:2];
                     //[_slidr setValue:sliderVal];
@@ -416,8 +418,45 @@
 }
 
 - (IBAction) play{
-    [self performSelectorInBackground:@selector(sendMidiClockInBackground) withObject:nil];
+    [self performSelectorInBackground:@selector(sendMidiClockInBG) withObject:nil];
+   // [self sendMidiClockInBG];
+}
+- (void) sendMidiClockInBG
+{
+    //Run this on a background thread
+    playing = true;
 
+    SInt32 latencyTime;
+    OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
+    
+    const UInt8 start[]      = {250};
+    
+    //[midi sendBytes:start size:sizeof(start)];
+    [midi sendQueuedMidi: start size:sizeof(start) atTime:mach_absolute_time()];
+    NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
+    theTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendClockTick) userInfo: nil repeats: TRUE];
+    [[NSRunLoop currentRunLoop] addTimer:theTimer forMode:NSDefaultRunLoopMode];
+
+    while(playing)
+    {
+        // allow the run loop to run for, arbitrarily, 2 seconds
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:100.0]];
+    }
+     
+}
+
+-(void) sendClickTickInBG
+{
+    [self performSelectorInBackground:@selector(sendClockTick) withObject:nil];
+
+}
+
+- (void)sendClockTick
+{
+    if(playing){
+        const UInt8 tick[]      = {248};
+        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time()];
+    }
 }
 
 - (IBAction) sendMidiClockInBackground
@@ -428,40 +467,96 @@
     //Send System Common Song Position Pointer
     //const UInt8 position[]      = {242,0,0};
     
+    
     SInt32 latencyTime;
     OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
     
-    NSLog(@"\n\nLatency: %ld, %ld", result, latencyTime);
+    //NSLog(@"\n\nLatency: %ld, %ld", result, latencyTime);
     
-    uint64_t onTime = mach_absolute_time() + result;
+    /* Get the timebase info */
+    mach_timebase_info_data_t info;
+    mach_timebase_info(&info);
+    
+    uint64_t startTime = mach_absolute_time();
+    
+    //onTime += result * 1000000;
     
     //[midi sendQueuedMidi: position size:sizeof(position) atTime:onTime];    
     
     const UInt8 start[]      = {250};
 
     //[midi sendBytes:start size:sizeof(start)];
-    [midi sendQueuedMidi: start size:sizeof(start) atTime:onTime];
+    [midi sendQueuedMidi: start size:sizeof(start) atTime:startTime];
 
+    //uint64_t duration = mach_absolute_time() - startTime;
     
-    while(playing)
-    {
+    //uint64_t sendTime = startTime;
+    //Timeout is in seconds
+    
+    /*
+    while(playing){
         const UInt8 tick[]      = {248};
         
-        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time() + result];
-
-        //NSLog(@"\n\nLatency: %llu", mach_absolute_time() + result);
-       
-        //NSLog(@"\n\n\nTempo is:%d", tempo);
-        double timeout = 1.0/((tempo * 24) / 60.0);
-        //NSLog(@"\n\nTimeout is:%f", timeout);
+        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time()];
+        NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
         [NSThread sleepForTimeInterval:timeout];
+
     }
+    */
+    
+    NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
+    [NSTimer scheduledTimerWithTimeInterval: timeout target: self selector: @selector(sendClockTick) userInfo: nil repeats: TRUE];  
+     
+    /*
+    while(playing)
+    {
+        
+        //[self performSelector:@selector(sendClockTick) withObject:nil afterDelay: timeout];
+        
+
+        
+        
+        //Duration is in nanoseconds
+        NSLog(@"\n\n\nduration is:%llu\n\n\n", duration);        
+
+        
+        const UInt8 tick[]      = {248};
+        
+        //Timeout is in seconds
+        NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
+        //NSTimeInterval timeout = 0.020833;
+        
+        NSLog(@"\n\n\nTimeout is:%f\n\n\n", timeout);
+        
+        // Convert to nanoseconds 
+        duration *= info.numer;
+        duration /= info.denom;
+        duration = timeout*1000000;
+        // Convert back 
+        duration /= info.numer;
+        duration *= info.denom;
+        
+        sendTime = mach_absolute_time() + result;
+        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:sendTime];
+        //[midi sendBytes: tick size:sizeof(tick)];
+
+        NSLog(@"\n\n\nsendTime is:%llu\n\n\n", sendTime);        
+        NSLog(@"\n\n\nduration 2 is:%llu\n\n\n", duration);
+        NSLog(@"\n\n\ncurr - sendTime is:%llu\n\n\n", currTime - sendTime);
+        NSLog(@"\n\n\ntimeout2 is:%f\n\n\n", timeout - (mach_absolute_time() - sendTime)/1000000000);
+
+        //[NSThread sleepForTimeInterval:timeout - (mach_absolute_time() - sendTime)/1000000000];
+         
+    }
+     */
 }
 
 - (IBAction)stopClock{
     playing = false;
     const UInt8 stop[]     = {252};
     [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];
+    
+    [theTimer invalidate];
 }
 
 -(IBAction) sweepSlide: (id) sender

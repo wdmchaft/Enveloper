@@ -65,6 +65,7 @@
     tempoStepper.value = tempo;
     LSB = 2;
     MSB = 2;
+    timeCounter = 0;
     if (self.detailItem) {
         self.detailDescriptionLabel.text = [self.detailItem description];
     }
@@ -82,7 +83,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    PaintView *paint = [[PaintView alloc] initWithFrame:_graph.bounds];
+    paint = [[PaintView alloc] initWithFrame:_graph.bounds];
     [_graph addSubview:paint];
     
     IF_IOS_HAS_COREMIDI
@@ -419,6 +420,8 @@
 
 - (IBAction) play{
     [self performSelectorInBackground:@selector(sendMidiClockInBG) withObject:nil];
+    [self performSelectorInBackground:@selector(sendMidiSweepInBG) withObject:nil];
+
    // [self sendMidiClockInBG];
 }
 - (void) sendMidiClockInBG
@@ -427,7 +430,7 @@
     playing = true;
 
     SInt32 latencyTime;
-    OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
+    //OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
     
     const UInt8 start[]      = {250};
     
@@ -437,6 +440,7 @@
     theTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendClockTick) userInfo: nil repeats: TRUE];
     [[NSRunLoop currentRunLoop] addTimer:theTimer forMode:NSDefaultRunLoopMode];
 
+    
     NSInteger date = 100;
     while(playing)
     {
@@ -447,18 +451,76 @@
      
 }
 
--(void) sendClickTickInBG
-{
-    [self performSelectorInBackground:@selector(sendClockTick) withObject:nil];
-
-}
-
 - (void)sendClockTick
 {
     if(playing){
         const UInt8 tick[]      = {248};
-        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time()];
+        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:mach_absolute_time()];        
     }
+}
+
+- (void) sendMidiSweepInBG
+{
+    //Run this on a background thread
+    playing = true;
+    
+    SInt32 latencyTime;
+    //OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
+        
+    //[midi sendBytes:start size:sizeof(start)];
+
+    NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
+    theTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendSweepFromGraph) userInfo: nil repeats: TRUE];
+    [[NSRunLoop currentRunLoop] addTimer:theTimer forMode:NSDefaultRunLoopMode];
+    
+    
+    NSInteger date = 100;
+    while(playing)
+    {
+        ++date;
+        // allow the run loop to run for, arbitrarily, 2 seconds
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:date]];
+    }
+    
+}
+
+-(void) sendSweepFromGraph{
+    
+    //playing = true;
+
+    
+    double t = (timeCounter%384) / 384.0f;
+    timeCounter++;
+    
+    //Out of 384 for 24 ticks per quarter note * 16 q notes
+    
+    //Run this on a background thread
+    
+    /* CGPoint s = CGPointMake(0.0, point3.y);
+     CGPoint e = CGPointMake(rect.size.width, 120.0);
+     CGPoint cp1 = CGPointMake(120.0, 30.0);
+     CGPoint cp2 = CGPointMake(210.0, 210.0);
+     */
+    
+    //Get slider value from datastore @ index, where index is ID
+    NSInteger sliderVal = pow((1-t),3)*paint.getStartNode + 3*pow((1-t),2)*t*30 + 3*(1-t)*pow(t,2)*120 + pow(t,3)*210;
+        
+    NSLog(@"\n\nSLIDER VAL IS %d", sliderVal);
+    
+    int bit1 = 0xB0 + channel - 1;
+    
+    const UInt8 LSBPacket[]      = {bit1, 98, LSB};
+    [midi sendBytes:LSBPacket size:sizeof(LSBPacket)];
+    [NSThread sleepForTimeInterval:0.01];
+    
+    const UInt8 MSBPacket[]      = {bit1, 99, MSB};
+    [midi sendBytes:MSBPacket size:sizeof(MSBPacket)];
+    [NSThread sleepForTimeInterval:0.01];
+    
+    const UInt8 Data[]      = {bit1, 6, sliderVal};
+    [midi sendBytes:Data size:sizeof(Data)];
+    
+    NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
 }
 
 - (IBAction) sendMidiClockInBackground
@@ -569,7 +631,9 @@
 - (IBAction) sendSweepSlide: (id)sender
 {
     //Run this on a background thread
+
     playing = true;
+    
 
     UISlider *slider = (UISlider *)sender;
     NSInteger sliderVal = (NSInteger) slider.value;
@@ -588,7 +652,6 @@
     [midi sendBytes:Data size:sizeof(Data)];
     
     NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
-
 
  }
 

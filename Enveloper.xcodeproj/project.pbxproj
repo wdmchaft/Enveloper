@@ -35,6 +35,9 @@
 		45EB248F150C22E100CFE4E0 /* PGMidiAllSources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45EB248B150C22E100CFE4E0 /* PGMidiAllSources.mm */; };
 		45EB2490150C22E100CFE4E0 /* PGMidiFind.mm in Sources */ = {isa = PBXBuildFile; fileRef = 45EB248D150C22E100CFE4E0 /* PGMidiFind.mm */; };
 		45EB2493150C240D00CFE4E0 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45EB2492150C240D00CFE4E0 /* CoreMIDI.framework */; };
+		83024C2A1539EF7A00940575 /* Instance.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 83024C281539EF7900940575 /* Instance.xcdatamodeld */; };
+		83024C321539F0E000940575 /* MidiControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 83024C311539F0E000940575 /* MidiControl.m */; };
+		83AA85921537FC59004E4846 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 83AA85911537FC59004E4846 /* Event.m */; };
 		83CC40C8150C1DFF00BCB0F3 /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83CC40C7150C1DFF00BCB0F3 /* PaintView.m */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +91,11 @@
 		45EB248C150C22E100CFE4E0 /* PGMidiFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGMidiFind.h; sourceTree = "<group>"; };
 		45EB248D150C22E100CFE4E0 /* PGMidiFind.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PGMidiFind.mm; sourceTree = "<group>"; };
 		45EB2492150C240D00CFE4E0 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		83024C291539EF7900940575 /* Instance.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Instance.xcdatamodel; sourceTree = "<group>"; };
+		83024C301539F0E000940575 /* MidiControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidiControl.h; sourceTree = SOURCE_ROOT; };
+		83024C311539F0E000940575 /* MidiControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MidiControl.m; sourceTree = SOURCE_ROOT; };
+		83AA85901537FC58004E4846 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		83AA85911537FC59004E4846 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		83CC40C6150C1DFF00BCB0F3 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaintView.h; path = Enveloper/PaintView.h; sourceTree = SOURCE_ROOT; };
 		83CC40C7150C1DFF00BCB0F3 /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaintView.m; path = Enveloper/PaintView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -159,6 +167,8 @@
 		453B47E21505A96200D94EE3 /* Enveloper */ = {
 			isa = PBXGroup;
 			children = (
+				83AA85901537FC58004E4846 /* Event.h */,
+				83AA85911537FC59004E4846 /* Event.m */,
 				453B47EB1505A96200D94EE3 /* AppDelegate.h */,
 				453B47EC1505A96200D94EE3 /* AppDelegate.m */,
 				453B47EE1505A96200D94EE3 /* MainStoryboard_iPhone.storyboard */,
@@ -170,6 +180,7 @@
 				45EB2485150C22E100CFE4E0 /* PGMidi */,
 				83CC40CA150C1E2200BCB0F3 /* Paint */,
 				453B47F41505A96200D94EE3 /* Enveloper.xcdatamodeld */,
+				83024C281539EF7900940575 /* Instance.xcdatamodeld */,
 				453B47E31505A96200D94EE3 /* Supporting Files */,
 			);
 			path = Enveloper;
@@ -226,6 +237,8 @@
 			children = (
 				83CC40C6150C1DFF00BCB0F3 /* PaintView.h */,
 				83CC40C7150C1DFF00BCB0F3 /* PaintView.m */,
+				83024C301539F0E000940575 /* MidiControl.h */,
+				83024C311539F0E000940575 /* MidiControl.m */,
 			);
 			path = Paint;
 			sourceTree = "<group>";
@@ -352,6 +365,9 @@
 				45EB248E150C22E100CFE4E0 /* PGMidi.mm in Sources */,
 				45EB248F150C22E100CFE4E0 /* PGMidiAllSources.mm in Sources */,
 				45EB2490150C22E100CFE4E0 /* PGMidiFind.mm in Sources */,
+				83AA85921537FC59004E4846 /* Event.m in Sources */,
+				83024C2A1539EF7A00940575 /* Instance.xcdatamodeld in Sources */,
+				83024C321539F0E000940575 /* MidiControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +568,16 @@
 			);
 			currentVersion = 453B47F51505A96200D94EE3 /* Enveloper.xcdatamodel */;
 			path = Enveloper.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		83024C281539EF7900940575 /* Instance.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				83024C291539EF7900940575 /* Instance.xcdatamodel */,
+			);
+			currentVersion = 83024C291539EF7900940575 /* Instance.xcdatamodel */;
+			path = Instance.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

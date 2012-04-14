@@ -26,6 +26,9 @@
     NSInteger LSB;
     NSInteger MSB;
     NSInteger loadCount;
+    NSInteger timeCounter;
+    
+    PaintView * paint;
     
     PGMidi *midi;
 }

@@ -66,17 +66,29 @@
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
-    point0 = point1;
-    point1 = point2;
-    point2 = point3;
-    point3 = [touch locationInView:self];
+    
+    if([touch locationInView:self].x > self.frame.size.width/2.0)
+    {
+        point0 = [touch locationInView:self];
+        
+        if(point0.x < 0)
+            point0.x = 0;
+        if(point0.y < 0)
+            point0.y=0;
+        if(point0.y > self.frame.size.height)
+            point0.y= self.frame.size.height;
 
-    if(point3.x < 0)
-        point3.x = 0;
-    if(point3.y < 0)
-        point3.y=0;
-    if(point3.y > 127)
-        point3.y=127;
+    } else {
+        point3 = [touch locationInView:self];
+        
+        if(point3.x < 0)
+            point3.x = 0;
+        if(point3.y < 0)
+            point3.y=0;
+        if(point3.y > self.frame.size.height)
+            point3.y= self.frame.size.height;
+    }
+    
         
     //[self drawToCache];
     [self setNeedsDisplay];    
@@ -168,9 +180,9 @@
     
     // Draw a bezier curve with end points s,e and control points cp1,cp2
     CGPoint s = CGPointMake(0.0, point3.y);
-    CGPoint e = CGPointMake(rect.size.width, 120.0);
-    CGPoint cp1 = CGPointMake(120.0, 30.0);
-    CGPoint cp2 = CGPointMake(210.0, 210.0);
+    CGPoint e = CGPointMake(rect.size.width, point0.y);
+    CGPoint cp1 = CGPointMake(rect.size.width/4.0, rect.size.height/4.0);
+    CGPoint cp2 = CGPointMake(rect.size.width*3.0/4.0, rect.size.height*3.0/4.0);
     CGContextMoveToPoint(context, s.x, s.y);
     CGContextAddCurveToPoint(context, cp1.x, cp1.y, cp2.x, cp2.y, e.x, e.y);
     CGContextStrokePath(context);
@@ -180,7 +192,11 @@
 }
 
 - (NSInteger) getStartNode{
-    return point3.y;
+    return point3.y/self.frame.size.height* 127;
+}
+
+- (NSInteger) getEndNode{
+    return point0.y/self.frame.size.height* 127;
 }
 
 #pragma mark - Core Data stack

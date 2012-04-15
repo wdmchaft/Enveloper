@@ -34,5 +34,6 @@
 - (BOOL) initContext:(CGSize)size;
 - (void) drawToCache;
 - (NSInteger) getStartNode;
+- (NSInteger) getEndNode;
 
 @end

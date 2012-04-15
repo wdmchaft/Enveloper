@@ -21,6 +21,8 @@
     UILabel    *countLabel;
     UITextView *textView;
     Boolean playing;
+    Boolean looping;
+
     NSInteger tempo;
     NSInteger channel;
     NSInteger LSB;
@@ -70,7 +72,9 @@
 @property (strong, nonatomic) IBOutlet UIStepper *MSBStepper;
 @property (strong, nonatomic) IBOutlet UILabel *MSBLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *holdSwitch;
-@property (strong, nonatomic) NSTimer * theTimer;
+@property (strong, nonatomic) NSTimer * clockTimer;
+@property (strong, nonatomic) NSTimer * loopTimer;
+
 
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;

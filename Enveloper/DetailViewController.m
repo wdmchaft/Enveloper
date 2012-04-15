@@ -38,7 +38,8 @@
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
 @synthesize masterPopoverController = _masterPopoverController;
-@synthesize theTimer;
+@synthesize clockTimer;
+@synthesize loopTimer;
 
 
 #pragma mark - Managing the detail item
@@ -310,7 +311,7 @@
             if( [self IntFromPacket:packet withIndex:0] != 0xF8){                
                 //NSLog(@"\n\nMIDI PACKET: %@", packetString);
                 
-                if( [self IntFromPacket:packet withIndex:1] == 98 && [self IntFromPacket:packet withIndex:2] != 100){
+                if( [self IntFromPacket:packet withIndex:1] == 98){
                     LSB = [self IntFromPacket:packet withIndex:2];
                     [LSBStepper setValue:LSB];
                     [LSBLabel performSelectorOnMainThread:@selector(setText:)
@@ -418,9 +419,14 @@
     _holdSwitch.on = theSwitch.on;
 }
 
+- (IBAction) loop{
+    [self performSelectorInBackground:@selector(sendMidiSweepInBG) withObject:nil];
+    
+    // [self sendMidiClockInBG];
+}
+
 - (IBAction) play{
     [self performSelectorInBackground:@selector(sendMidiClockInBG) withObject:nil];
-    [self performSelectorInBackground:@selector(sendMidiSweepInBG) withObject:nil];
 
    // [self sendMidiClockInBG];
 }
@@ -437,8 +443,8 @@
     //[midi sendBytes:start size:sizeof(start)];
     [midi sendQueuedMidi: start size:sizeof(start) atTime:mach_absolute_time()];
     NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
-    theTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendClockTick) userInfo: nil repeats: TRUE];
-    [[NSRunLoop currentRunLoop] addTimer:theTimer forMode:NSDefaultRunLoopMode];
+    clockTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendClockTick) userInfo: nil repeats: TRUE];
+    [[NSRunLoop currentRunLoop] addTimer:clockTimer forMode:NSDefaultRunLoopMode];
 
     
     NSInteger date = 100;
@@ -462,7 +468,7 @@
 - (void) sendMidiSweepInBG
 {
     //Run this on a background thread
-    playing = true;
+    looping = true;
     
     SInt32 latencyTime;
     //OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
@@ -470,12 +476,12 @@
     //[midi sendBytes:start size:sizeof(start)];
 
     NSTimeInterval timeout = 1.0/((tempo*24)/60.0);
-    theTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendSweepFromGraph) userInfo: nil repeats: TRUE];
-    [[NSRunLoop currentRunLoop] addTimer:theTimer forMode:NSDefaultRunLoopMode];
+    loopTimer = [NSTimer timerWithTimeInterval: timeout target: self selector: @selector(sendSweepFromGraph) userInfo: nil repeats: TRUE];
+    [[NSRunLoop currentRunLoop] addTimer:loopTimer forMode:NSDefaultRunLoopMode];
     
     
     NSInteger date = 100;
-    while(playing)
+    while(looping)
     {
         ++date;
         // allow the run loop to run for, arbitrarily, 2 seconds
@@ -486,41 +492,39 @@
 
 -(void) sendSweepFromGraph{
     
-    //playing = true;
-
-    
-    double t = (timeCounter%384) / 384.0f;
-    timeCounter++;
-    
-    //Out of 384 for 24 ticks per quarter note * 16 q notes
-    
-    //Run this on a background thread
-    
-    /* CGPoint s = CGPointMake(0.0, point3.y);
-     CGPoint e = CGPointMake(rect.size.width, 120.0);
-     CGPoint cp1 = CGPointMake(120.0, 30.0);
-     CGPoint cp2 = CGPointMake(210.0, 210.0);
-     */
-    
-    //Get slider value from datastore @ index, where index is ID
-    NSInteger sliderVal = pow((1-t),3)*paint.getStartNode + 3*pow((1-t),2)*t*30 + 3*(1-t)*pow(t,2)*120 + pow(t,3)*210;
+    if(looping){
         
-    NSLog(@"\n\nSLIDER VAL IS %d", sliderVal);
-    
-    int bit1 = 0xB0 + channel - 1;
-    
-    const UInt8 LSBPacket[]      = {bit1, 98, LSB};
-    [midi sendBytes:LSBPacket size:sizeof(LSBPacket)];
-    [NSThread sleepForTimeInterval:0.01];
-    
-    const UInt8 MSBPacket[]      = {bit1, 99, MSB};
-    [midi sendBytes:MSBPacket size:sizeof(MSBPacket)];
-    [NSThread sleepForTimeInterval:0.01];
-    
-    const UInt8 Data[]      = {bit1, 6, sliderVal};
-    [midi sendBytes:Data size:sizeof(Data)];
-    
-    NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
+        double t = (timeCounter%96) / 96.0f;
+        timeCounter++;
+        
+        //Out of 384 for 24 ticks per quarter note * 16 q notes
+        
+        //Run this on a background thread
+        
+        /* CGPoint s = CGPointMake(0.0, point3.y);
+         CGPoint e = CGPointMake(rect.size.width, 120.0);
+         CGPoint cp1 = CGPointMake(120.0, 30.0);
+         CGPoint cp2 = CGPointMake(210.0, 210.0);
+         */
+        
+        //Get slider value from datastore @ index, where index is ID
+        NSInteger sliderVal = pow((1-t),3)*paint.getStartNode + pow(t,3)*paint.getEndNode;
+                    
+        int bit1 = 0xB0 + channel - 1;
+        
+        const UInt8 LSBPacket[]      = {bit1, 98, LSB};
+        [midi sendBytes:LSBPacket size:sizeof(LSBPacket)];
+        [NSThread sleepForTimeInterval:0.01];
+        
+        const UInt8 MSBPacket[]      = {bit1, 99, MSB};
+        [midi sendBytes:MSBPacket size:sizeof(MSBPacket)];
+        [NSThread sleepForTimeInterval:0.01];
+        
+        const UInt8 Data[]      = {bit1, 6, sliderVal};
+        [midi sendBytes:Data size:sizeof(Data)];
+        
+        NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
+    }
 }
 
 - (IBAction) sendMidiClockInBackground
@@ -620,8 +624,14 @@
     const UInt8 stop[]     = {252};
     [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];
     
-    [theTimer invalidate];
+    [clockTimer invalidate];
 }
+
+- (IBAction)stopLoop{
+    looping = false;
+    [loopTimer invalidate];
+}
+
 
 -(IBAction) sweepSlide: (id) sender
 {

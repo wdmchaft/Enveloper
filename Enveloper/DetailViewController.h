@@ -14,6 +14,7 @@
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
+
 @class PGMidi;
 
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
@@ -71,16 +72,17 @@
 @property (strong, nonatomic) IBOutlet UILabel *LSBLabel;
 @property (strong, nonatomic) IBOutlet UIStepper *MSBStepper;
 @property (strong, nonatomic) IBOutlet UILabel *MSBLabel;
-@property (strong, nonatomic) IBOutlet UISwitch *holdSwitch;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *holdSwitch;
 @property (strong, nonatomic) NSTimer * clockTimer;
 @property (strong, nonatomic) NSTimer * loopTimer;
+@property (strong, nonatomic) NSThread * loopThread;
 
 
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;
 - (IBAction) changeChannel : (id)sender;
--(IBAction) changeLSB:(id)sender;
--(IBAction) changeMSB:(id)sender;
-- (void)sendClockTick;
-- (void) sendMidiClockInBG;
+- (IBAction) changeLSB:(id)sender;
+- (IBAction) changeMSB:(id)sender;
+- (void)     sendClockTick;
+- (void)     sendMidiClockInBG;
 @end

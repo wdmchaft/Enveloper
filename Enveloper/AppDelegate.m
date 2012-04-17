@@ -29,7 +29,7 @@
 {
     
      masterViewController = [ MasterViewController alloc];
-
+/*
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
@@ -42,10 +42,11 @@
         masterViewController.managedObjectContext = self.managedObjectContext;
         
     } else {
+ */
         UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
         masterViewController = (MasterViewController *)navigationController.topViewController;
         masterViewController.managedObjectContext = self.managedObjectContext;
-    }
+    //}
 
     
     return YES;
@@ -199,7 +200,6 @@
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
-
 
 - (void)dealloc
 {

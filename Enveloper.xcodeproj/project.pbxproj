@@ -19,7 +19,6 @@
 		453B47F61505A96200D94EE3 /* Enveloper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 453B47F41505A96200D94EE3 /* Enveloper.xcdatamodeld */; };
 		453B47F91505A96200D94EE3 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453B47F81505A96200D94EE3 /* MasterViewController.m */; };
 		453B47FC1505A96200D94EE3 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453B47FB1505A96200D94EE3 /* DetailViewController.m */; };
-		453B48041505A96200D94EE3 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B48031505A96200D94EE3 /* SenTestingKit.framework */; };
 		453B48051505A96200D94EE3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B47DA1505A96200D94EE3 /* UIKit.framework */; };
 		453B48061505A96200D94EE3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B47DC1505A96200D94EE3 /* Foundation.framework */; };
 		453B48071505A96200D94EE3 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453B47E01505A96200D94EE3 /* CoreData.framework */; };
@@ -66,7 +65,6 @@
 		453B47FA1505A96200D94EE3 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		453B47FB1505A96200D94EE3 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		453B48021505A96200D94EE3 /* EnveloperTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EnveloperTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		453B48031505A96200D94EE3 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		453B480C1505A96200D94EE3 /* EnveloperTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EnveloperTests-Info.plist"; sourceTree = "<group>"; };
 		453B480E1505A96200D94EE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		453B48101505A96200D94EE3 /* EnveloperTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnveloperTests.h; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				453B48041505A96200D94EE3 /* SenTestingKit.framework in Frameworks */,
 				453B48051505A96200D94EE3 /* UIKit.framework in Frameworks */,
 				453B48061505A96200D94EE3 /* Foundation.framework in Frameworks */,
 				453B48071505A96200D94EE3 /* CoreData.framework in Frameworks */,
@@ -149,7 +146,6 @@
 				453B47DC1505A96200D94EE3 /* Foundation.framework */,
 				453B47DE1505A96200D94EE3 /* CoreGraphics.framework */,
 				453B47E01505A96200D94EE3 /* CoreData.framework */,
-				453B48031505A96200D94EE3 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -425,7 +421,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -444,7 +440,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -455,7 +451,7 @@
 		453B48161505A96200D94EE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "Enveloper/Enveloper-Prefix.pch";
 				INFOPLIST_FILE = "Enveloper/Enveloper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
@@ -468,7 +464,7 @@
 		453B48171505A96200D94EE3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "Enveloper/Enveloper-Prefix.pch";
 				INFOPLIST_FILE = "Enveloper/Enveloper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
@@ -522,7 +518,7 @@
 				453B48141505A96200D94EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		453B48151505A96200D94EE3 /* Build configuration list for PBXNativeTarget "Enveloper" */ = {
 			isa = XCConfigurationList;
@@ -531,7 +527,7 @@
 				453B48171505A96200D94EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		453B48181505A96200D94EE3 /* Build configuration list for PBXNativeTarget "EnveloperTests" */ = {
 			isa = XCConfigurationList;
@@ -540,7 +536,7 @@
 				453B481A1505A96200D94EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

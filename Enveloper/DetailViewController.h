@@ -72,6 +72,10 @@
 @property (strong, nonatomic) IBOutlet UILabel *LSBLabel;
 @property (strong, nonatomic) IBOutlet UIStepper *MSBStepper;
 @property (strong, nonatomic) IBOutlet UILabel *MSBLabel;
+@property (strong, nonatomic) IBOutlet UIStepper *BeatStepper;
+@property (strong, nonatomic) IBOutlet UILabel *BeatLabel;
+@property (strong, nonatomic) IBOutlet UIStepper *MeasureStepper;
+@property (strong, nonatomic) IBOutlet UILabel *MeasureLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *holdSwitch;
 @property (strong, nonatomic) NSTimer * clockTimer;
 @property (strong, nonatomic) NSTimer * loopTimer;

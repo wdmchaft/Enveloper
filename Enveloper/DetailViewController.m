@@ -41,6 +41,7 @@
 @synthesize clockTimer;
 @synthesize loopTimer;
 @synthesize loopThread;
+@synthesize MeasureLabel, MeasureStepper, BeatLabel, BeatStepper;
 
 
 #pragma mark - Managing the detail item
@@ -145,7 +146,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     
-    //return NO;
+    return NO;
     
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {

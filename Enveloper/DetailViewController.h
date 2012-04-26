@@ -30,6 +30,8 @@
     NSInteger MSB;
     NSInteger loadCount;
     NSInteger timeCounter;
+    NSInteger beat;
+    NSInteger measure;
     
     PaintView * paint;
     
@@ -87,6 +89,9 @@
 - (IBAction) changeChannel : (id)sender;
 - (IBAction) changeLSB:(id)sender;
 - (IBAction) changeMSB:(id)sender;
+- (IBAction) changeBeat:(id)sender;
+- (IBAction) changeMeasure:(id)sender;
+
 - (void)     sendClockTick;
 - (void)     sendMidiClockInBG;
 @end

@@ -343,8 +343,6 @@
                     }
                 }
         
-           
-            
             
             /*Make function to calculate tempo */
             packet = MIDIPacketNext(packet);
@@ -420,6 +418,22 @@
     
     [MSBLabel setText:[NSString stringWithFormat:@"%d", MSB]];
     
+}
+
+- (IBAction) changeBeat: (id) sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    beat = (NSInteger) stepper.value;
+    
+    [BeatLabel setText:[NSString stringWithFormat:@"%d", beat]];
+}
+
+- (IBAction) changeMeasure: (id) sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    measure = (NSInteger) stepper.value;
+    
+    [MeasureLabel setText:[NSString stringWithFormat:@"%d", measure]];
 }
            
 -(IBAction) toggleHold:(id)sender
@@ -509,8 +523,9 @@
 -(void) sendSweepFromGraph{
     
     if(looping){
-        
-        double t = (timeCounter%96) / 96.0f;
+        int timesig = 24 * beat * measure;
+        double timesigD = 24 * beat * measure;
+        double t = (timeCounter%timesig) / timesigD;
         timeCounter++;
         
         //Out of 384 for 24 ticks per quarter note * 16 q notes

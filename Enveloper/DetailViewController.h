@@ -37,6 +37,15 @@
     
     PGMidi *midi;
 }
+
+// Core data stuff
+@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext; // "Bridge" or connection between your code and the data store
+
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel; // Contains your schema; contains methods for deleting/adding data to data store
+
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator; // "Bridge" or connection between your application and physical files
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+
 #if ! __has_feature(objc_arc)
 
 @property (nonatomic,retain) IBOutlet UILabel    *countLabel;

@@ -1,8 +1,8 @@
 //
-//  Event.m
+//  MidiEvent.m
 //  Enveloper
 //
-//  Created by Chris Latina on 4/10/12.
+//  Created by Christopher Latina on 4/26/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -10,7 +10,8 @@
 
 @implementation Event
 
-@dynamic timeStamp;
-@dynamic startNode;
+@dynamic lsb;
+@dynamic msb;
+@dynamic timestamp;
 
 @end

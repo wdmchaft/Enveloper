@@ -1,18 +1,17 @@
 //
-//  Event.h
+//  MidiEvent.h
 //  Enveloper
 //
-//  Created by Chris Latina on 4/10/12.
+//  Created by Christopher Latina on 4/26/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@interface Event : NSObject
+@interface Event : NSManagedObject
 
-@property (nonatomic, retain) NSDate * timeStamp;
-@property (nonatomic, retain) NSNumber * startNode;
-
-
+@property (nonatomic, retain) NSNumber * lsb;
+@property (nonatomic, retain) NSNumber * msb;
+@property (nonatomic, retain) NSDate * timestamp;
 @end

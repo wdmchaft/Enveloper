@@ -189,6 +189,9 @@
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minimumValue="1" maximumValue="20" id="O5Y-8A-gfG">
                                 <rect key="frame" x="359" y="569" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="changeBeat:" destination="4" eventType="valueChanged" id="ZIk-OU-kV5"/>
+                                </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="4" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="JYx-vd-cSN">
                                 <rect key="frame" x="415" y="546" width="33" height="21"/>
@@ -207,6 +210,9 @@
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minimumValue="1" maximumValue="20" id="4Oc-Ry-aGd">
                                 <rect key="frame" x="359" y="628" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="changeMeasure:" destination="4" eventType="valueChanged" id="dSD-gh-mVF"/>
+                                </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="4" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="Msi-Wv-LKh">
                                 <rect key="frame" x="415" y="605" width="33" height="21"/>
@@ -230,10 +236,14 @@
                     <navigationItem key="navigationItem" title="Graph" id="53"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
+                        <outlet property="BeatLabel" destination="JYx-vd-cSN" id="LRF-LV-4Xs"/>
+                        <outlet property="BeatStepper" destination="O5Y-8A-gfG" id="YIA-Hc-3sI"/>
                         <outlet property="LSBLabel" destination="g8f-Gk-ad9" id="Ulz-sr-nfP"/>
                         <outlet property="LSBStepper" destination="70B-Ni-ZNE" id="09Z-HC-6LB"/>
                         <outlet property="MSBLabel" destination="vzG-j5-LLG" id="PQx-S2-IYw"/>
                         <outlet property="MSBStepper" destination="twd-Wz-wBy" id="pXt-WY-hRo"/>
+                        <outlet property="MeasureLabel" destination="Msi-Wv-LKh" id="Vn4-EH-hEl"/>
+                        <outlet property="MeasureStepper" destination="4Oc-Ry-aGd" id="gYg-Ne-MEk"/>
                         <outlet property="channelLabel" destination="gZC-s7-PF4" id="YE5-SQ-PO4"/>
                         <outlet property="channelStepper" destination="gre-yd-8bT" id="Psi-2f-nyA"/>
                         <outlet property="countLabel" destination="T4x-kp-VXf" id="ku8-97-HMB"/>
@@ -298,19 +308,25 @@
         <class className="DetailViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DetailViewController.h"/>
             <relationships>
+                <relationship kind="action" name="changeBeat:"/>
                 <relationship kind="action" name="changeChannel:"/>
                 <relationship kind="action" name="changeLSB:"/>
                 <relationship kind="action" name="changeMSB:"/>
+                <relationship kind="action" name="changeMeasure:"/>
                 <relationship kind="action" name="clearTextView"/>
                 <relationship kind="action" name="listAllInterfaces"/>
                 <relationship kind="action" name="sendMidiData"/>
                 <relationship kind="action" name="sendMidiDataFromSlider:"/>
                 <relationship kind="action" name="setTempo:"/>
                 <relationship kind="action" name="sliderChanged:"/>
+                <relationship kind="outlet" name="BeatLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="BeatStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="LSBLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="LSBStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="MSBLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="MSBStepper" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="MeasureLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="MeasureStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="channelLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="channelStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>

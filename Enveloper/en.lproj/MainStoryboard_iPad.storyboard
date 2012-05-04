@@ -78,6 +78,12 @@
                                             <action selector="listAllInterfaces" destination="4" id="oNR-ID-sNU"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Save" id="B62-ux-30G">
+                                        <color key="tintColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="saveData:" destination="4" id="gZp-jc-HiF"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" minimumFontSize="10" id="T4x-kp-VXf">
@@ -233,7 +239,15 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Graph" id="53"/>
+                    <navigationItem key="navigationItem" id="53">
+                        <nil key="title"/>
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="mEU-dS-DbN">
+                            <rect key="frame" x="342" y="7" width="339" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                    </navigationItem>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="BeatLabel" destination="JYx-vd-cSN" id="LRF-LV-4Xs"/>
@@ -249,6 +263,7 @@
                         <outlet property="countLabel" destination="T4x-kp-VXf" id="ku8-97-HMB"/>
                         <outlet property="graph" destination="BMt-b1-1Ee" id="yZ7-K6-67E"/>
                         <outlet property="holdSwitch" destination="IsL-x3-QIq" id="pWR-J5-kDQ"/>
+                        <outlet property="label" destination="mEU-dS-DbN" id="PDz-MT-28T"/>
                         <outlet property="tempoLabel" destination="vx4-n2-QgY" id="LMT-0P-ir9"/>
                         <outlet property="tempoStepper" destination="DQb-ZG-BNQ" id="MHt-5q-SIh"/>
                         <outlet property="textView" destination="A2t-T0-Vpd" id="OgT-Lw-efb"/>
@@ -315,6 +330,7 @@
                 <relationship kind="action" name="changeMeasure:"/>
                 <relationship kind="action" name="clearTextView"/>
                 <relationship kind="action" name="listAllInterfaces"/>
+                <relationship kind="action" name="saveData:"/>
                 <relationship kind="action" name="sendMidiData"/>
                 <relationship kind="action" name="sendMidiDataFromSlider:"/>
                 <relationship kind="action" name="setTempo:"/>
@@ -333,6 +349,7 @@
                 <relationship kind="outlet" name="detailDescriptionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="graph" candidateClass="UIView"/>
                 <relationship kind="outlet" name="holdSwitch" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="label" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="slidr" candidateClass="UISlider"/>
                 <relationship kind="outlet" name="tempoLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="tempoStepper" candidateClass="UIStepper"/>

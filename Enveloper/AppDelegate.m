@@ -16,6 +16,8 @@
 
 @implementation AppDelegate 
 
+@synthesize currentTimeStamp;
+
 @synthesize window = _window;
 @synthesize detailViewController = _detailViewController;
 @synthesize masterViewController = _masterViewController;

@@ -28,6 +28,16 @@
 - (NSInteger) getStartNode;
 - (NSInteger) getcp1;
 - (NSInteger) getcp2;
+
+- (CGPoint) getfullcp1;
+- (CGPoint) getfullcp2;
+- (CGPoint) getfullstartNode;
+- (CGPoint) getfullendNode;
+- (void) setfullstartNode: (CGPoint) point;
+- (void) setfullendNode: (CGPoint) point;
+- (void) setfullcp1: (CGPoint) point;
+- (void) setfullcp2: (CGPoint) point;
+
 - (NSInteger) getEndNode;
 - (bool) isInControlPoint: (CGPoint) cp atTouch: (CGPoint) touchPoint;
 

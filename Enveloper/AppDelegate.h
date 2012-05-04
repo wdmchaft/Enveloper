@@ -18,7 +18,11 @@
     DetailViewController      *detailViewController;
     MasterViewController      *masterViewController;
     PGMidi                    *midi;
+    NSDate                    *currentTimeStamp;
 }
+
+@property (strong, nonatomic) NSDate *currentTimeStamp;
+
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;

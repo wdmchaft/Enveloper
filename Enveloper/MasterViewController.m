@@ -144,24 +144,27 @@
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // The table view should not be re-orderable.
-    return NO;
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.detailViewController.detailItem = selectedObject;    
+        
+        self.detailViewController.detailItem = selectedObject;
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
+    //if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        appDelegate.currentTimeStamp = [selectedObject valueForKey:@"timeStamp"];
         [[segue destinationViewController] setDetailItem:selectedObject];
-    }
+    //}
 }
 
 #pragma mark - Fetched results controller
@@ -271,7 +274,7 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[managedObject valueForKey:@"label"] description];
+    cell.textLabel.text = [[managedObject valueForKey:@"bankLabel"] description];
 }
 
 - (void)insertNewObject
@@ -284,7 +287,19 @@
     // If appropriate, configure the new managed object.
     // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
     [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    [newManagedObject setValue:@"Test Label" forKey:@"label"];
+    [newManagedObject setValue:@"New Bank" forKey:@"bankLabel"];
+    [newManagedObject setValue:[NSNumber numberWithInt:2] forKey:@"msb"];
+    [newManagedObject setValue:[NSNumber numberWithInt:2] forKey:@"lsb"];
+    [newManagedObject setValue:[NSNumber numberWithInt:4] forKey:@"beat"];
+    [newManagedObject setValue:[NSNumber numberWithInt:4] forKey:@"measure"];
+    [newManagedObject setValue:[NSNumber numberWithInt:120] forKey:@"tempo"];
+    [newManagedObject setValue:[NSNumber numberWithInt:1] forKey:@"channel"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:0.5] forKey:@"startNode"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:0.5] forKey:@"endNode"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:.25] forKey:@"cp1x"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:0.5] forKey:@"cp1y"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:.75] forKey:@"cp2x"];
+    [newManagedObject setValue:[NSNumber numberWithDouble:0.5] forKey:@"cp2y"];
     
     // Save the context.
     NSError *error = nil;
@@ -296,6 +311,30 @@
          */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
+    }
+    
+    [self getObjects];
+}
+
+- (void) getObjects
+{
+    NSError *error = nil;
+    // Get data
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *searchEntity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:searchEntity];
+    NSMutableArray *results = [[self.managedObjectContext executeFetchRequest:request
+                                                                    error:&error]mutableCopy];
+
+    if ([results count] == 0) {
+        NSLog(@"No results, setting defaults");
+    }
+    else {
+        NSLog(@"\n\nallresults: %@\n\n", results);
+    
+        NSManagedObject *theObject = [results objectAtIndex:0];
+        NSLog(@"timeStamp: %@", [theObject valueForKey:@"timeStamp"]);
+        NSLog(@"msb: %@", [theObject valueForKey:@"msb"]);
     }
 }
 

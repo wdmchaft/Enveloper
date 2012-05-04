@@ -14,6 +14,8 @@
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
+#import "AppDelegate.h"
+
 
 @class PGMidi;
 
@@ -37,15 +39,6 @@
     
     PGMidi *midi;
 }
-
-// Core data stuff
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext; // "Bridge" or connection between your code and the data store
-
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel; // Contains your schema; contains methods for deleting/adding data to data store
-
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator; // "Bridge" or connection between your application and physical files
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-
 #if ! __has_feature(objc_arc)
 
 @property (nonatomic,retain) IBOutlet UILabel    *countLabel;
@@ -74,6 +67,7 @@
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) IBOutlet UIView *graph;
 @property (strong, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (strong, nonatomic) IBOutlet UITextField *label;
 @property (strong, nonatomic) IBOutlet UISlider *slidr;
 @property (strong, nonatomic) IBOutlet UIStepper *tempoStepper;
 @property (strong, nonatomic) IBOutlet UILabel *tempoLabel;
@@ -93,6 +87,7 @@
 @property (strong, nonatomic) NSThread * loopThread;
 
 
+
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;
 - (IBAction) changeChannel : (id)sender;
@@ -100,6 +95,10 @@
 - (IBAction) changeMSB:(id)sender;
 - (IBAction) changeBeat:(id)sender;
 - (IBAction) changeMeasure:(id)sender;
+- (IBAction) saveData:(id)sender;
+
+//Setters
+- (void) setLSB: (NSString *) lsbval;
 
 - (void)     sendClockTick;
 - (void)     sendMidiClockInBG;

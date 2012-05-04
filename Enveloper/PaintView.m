@@ -19,12 +19,14 @@
         
         nodeSize = frame.size.width/25.0;
         nodes = [[NSMutableArray alloc] init];
-
         
-        startNode = CGPointMake(0.0f,0.0f);
-        endNode = CGPointMake(frame.size.width, frame.size.height);
-        cp1 = CGPointMake(frame.size.width/4.0, frame.size.height/4.0);
-        cp2 = CGPointMake(frame.size.width*3.0/4.0, frame.size.height*3.0/4.0);
+        startNode.x = 0.0;
+        endNode.x = frame.size.width;
+        
+        //startNode = CGPointMake(0.0f,0.0f);
+        //endNode = CGPointMake(frame.size.width, frame.size.height);
+        //cp1 = CGPointMake(frame.size.width/4.0, frame.size.height/4.0);
+        //cp2 = CGPointMake(frame.size.width*3.0/4.0, frame.size.height*3.0/4.0);
         [nodes addObject:[NSValue valueWithCGPoint:startNode]];
         [nodes addObject:[NSValue valueWithCGPoint:endNode]];
         [nodes addObject:[NSValue valueWithCGPoint:cp1]];
@@ -131,6 +133,7 @@
 
 }
 
+
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
@@ -140,18 +143,32 @@
     // Drawing with a white stroke color
     CGContextSetRGBStrokeColor(context, 1.0, 1.0, 1.0, 1.0);
     // Draw them with a 2.0 stroke width so they are a bit more visible.
-    CGContextSetLineWidth(context, 2.0);
+    CGContextSetLineWidth(context, 4.0);
     
     // Draw a bezier curve with end points s,e and control points cp1,cp2
     CGContextMoveToPoint(context, startNode.x, startNode.y);
     CGContextAddCurveToPoint(context, cp1.x, cp1.y, cp2.x, cp2.y, endNode.x, endNode.y);
     CGContextStrokePath(context);
     
+    
+    // Drawing with a white stroke color
+    CGContextSetRGBStrokeColor(context, 1.0, 0.5, 0.5, 1.0);
+    // Draw them with a 2.0 stroke width so they are a bit more visible.
+    CGContextSetLineWidth(context, 2.0);
+        
+    CGContextMoveToPoint(context, startNode.x, startNode.y);
+    CGContextAddLineToPoint(context, cp1.x, cp1.y);
+    CGContextStrokePath(context);
+    
+    
+    CGContextMoveToPoint(context, cp2.x, cp2.y);
+    CGContextAddLineToPoint(context, endNode.x, endNode.y);
+    CGContextStrokePath(context);
+    
     [self drawControlPoint:startNode];
     [self drawControlPoint:cp1];
     [self drawControlPoint:cp2];
     [self drawControlPoint:endNode];
-    
     
     CGImageRelease(cacheImage);
 }
@@ -166,6 +183,58 @@
 
 - (NSInteger) getcp2{
     return cp2.y/self.frame.size.height* 127;
+}
+
+- (CGPoint) getfullstartNode{
+    CGPoint result = startNode;
+    result.x = result.x / self.frame.size.width;
+    result.y = result.y / self.frame.size.height;
+    return result;
+}
+
+- (CGPoint) getfullendNode{
+    CGPoint result = endNode;
+    result.x = result.x / self.frame.size.width;
+    result.y = result.y / self.frame.size.height;
+    return result;
+}
+
+- (CGPoint) getfullcp1{
+    CGPoint result = cp1;
+    result.x = result.x / self.frame.size.width;
+    result.y = result.y / self.frame.size.height;
+    return result;
+}
+
+- (CGPoint) getfullcp2{
+    CGPoint result = cp2;
+    result.x = result.x / self.frame.size.width;
+    result.y = result.y / self.frame.size.height;
+    return result;
+}
+
+- (void) setfullstartNode: (CGPoint) point{
+    point.x = 0.0 * self.frame.size.width;
+    point.y = point.y * self.frame.size.height;
+    startNode = point;
+}
+
+- (void) setfullendNode:(CGPoint) point{
+    point.x = 1.0 * self.frame.size.width;
+    point.y = point.y * self.frame.size.height;
+    endNode = point;
+}
+
+- (void) setfullcp1: (CGPoint) point{
+    point.x = point.x * self.frame.size.width;
+    point.y = point.y * self.frame.size.height;
+    cp1 = point;
+}
+
+- (void) setfullcp2:(CGPoint) point{
+    point.x = point.x * self.frame.size.width;
+    point.y = point.y * self.frame.size.height;
+    cp2 = point;
 }
 
 - (NSInteger) getEndNode{

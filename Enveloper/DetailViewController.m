@@ -20,11 +20,6 @@
 
 @implementation DetailViewController
 
-#pragma mark coreData
-@synthesize managedObjectContext = __managedObjectContext;
-@synthesize managedObjectModel = __managedObjectModel;
-@synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
-@synthesize fetchedResultsController;
 
 #pragma mark PGMidiDelegate
 @synthesize countLabel;
@@ -32,6 +27,7 @@
 @synthesize midi;
 
 @synthesize graph = _graph;
+@synthesize label = _label;
 @synthesize holdSwitch = _holdSwitch;
 @synthesize tempoLabel = _tempoLabel;
 @synthesize tempoStepper;
@@ -51,108 +47,7 @@
 @synthesize MeasureLabel, MeasureStepper, BeatLabel, BeatStepper;
 
 
-#pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem
-{
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
-        
-        // Update the view.
-        [self configureView];
-    }
-
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }        
-}
-
-- (void)saveContext
-{
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        } 
-    }
-}
-
-#pragma mark - Core Data stack
-
-// Returns the managed object context for the application.
-// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (__managedObjectContext != nil) {
-        return __managedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        __managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [__managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    return __managedObjectContext;
-}
-
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel
-{
-    if (__managedObjectModel != nil) {
-        return __managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Enveloper" withExtension:@"momd"];
-    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return __managedObjectModel;
-}
-
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-    if (__persistentStoreCoordinator != nil) {
-        return __persistentStoreCoordinator;
-    }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Enveloper.sqlite"];
-    
-    NSError *error = nil;
-    __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
-         [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }    
-    
-    return __persistentStoreCoordinator;
-}
 #pragma mark - Application's Documents directory
 
 // Returns the URL to the application's Documents directory.
@@ -161,50 +56,132 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (void)configureView
+- (void) getData
 {
     NSError *error;
-    // Update the user interface for the detail item.
-    
-    // Add an employee to our data store
-    Event *e = (Event *)[NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
-    [e setTimestamp:[NSDate date]];
-    [e setLsb:[NSNumber numberWithInt:2]];
-    [e setMsb:[NSNumber numberWithInt:2]];
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Your data was not saved!");
-    }
-    else {
-        NSLog(@"Thanks, your data was saved");
-    }
-    
-    
-    // Get data
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = 
+    [NSEntityDescription entityForName:@"Event" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *searchEntity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entityDesc];
+    NSEntityDescription *searchEntity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:context];
     [request setEntity:searchEntity];
+    NSPredicate *pred = 
+    [NSPredicate predicateWithFormat:@"(timeStamp = %@)", appDelegate.currentTimeStamp];
+    [request setPredicate:pred];
+    NSMutableArray *results = [[context executeFetchRequest:request error:&error]mutableCopy];
     
-    NSMutableArray *results = [[self.managedObjectContext executeFetchRequest:request
-                                                                        error:&error]mutableCopy];
     if ([results count] == 0) {
-        NSLog(@"No results");
+        NSLog(@"No results, setting defaults");
+        
     }
     else {
-        NSLog(@"%@", results);
+        NSLog(@"\n\nDETAIL VIEW CONTROLLER ALL DATA: %@\n\n", results);
+        
+        NSManagedObject *theObject = [results objectAtIndex:0];
+        LSB = [[theObject valueForKey:@"lsb"] intValue];
+        [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
+        
+        MSB = [[theObject valueForKey:@"msb"] intValue];
+        [MSBLabel setText:[NSString stringWithFormat:@"%d", MSB]];
+        
+        channel = [[theObject valueForKey:@"channel"] intValue];
+        [_channelLabel setText:[NSString stringWithFormat:@"%d", channel]];
+        
+        tempo = [[theObject valueForKey:@"tempo"] intValue];
+        tempoStepper.value = tempo;
+        [_tempoLabel setText:[NSString stringWithFormat:@"%d", tempo]];
+        
+        beat = [[theObject valueForKey:@"beat"] intValue];
+        [BeatLabel setText:[NSString stringWithFormat:@"%d", beat]];
+        
+        measure = [[theObject valueForKey:@"measure"] intValue];
+        [MeasureLabel setText:[NSString stringWithFormat:@"%d", measure]];
+        
+        CGPoint startNode = CGPointMake(0.0f,[[theObject valueForKey:@"startNode"] doubleValue]);
+        [paint setfullstartNode:startNode];
+        
+        CGPoint cp1 = CGPointMake([[theObject valueForKey:@"cp1x"] doubleValue],[[theObject valueForKey:@"cp1y"] doubleValue]);
+        [paint setfullcp1:cp1];
+        
+        CGPoint cp2 = CGPointMake([[theObject valueForKey:@"cp2x"] doubleValue],[[theObject valueForKey:@"cp2y"] doubleValue]);
+        [paint setfullcp2:cp2];
+        
+        CGPoint endNode = CGPointMake(0.0f,[[theObject valueForKey:@"endNode"] doubleValue]);
+        [paint setfullendNode:endNode];
+        
+        NSString * labelString = [[theObject valueForKey:@"bankLabel"] description];
+        [_label setText: labelString];
+        
     }
+}
 
-    channel = 1;
-    tempo = 120;
-    tempoStepper.value = tempo;
-    LSB = 2;
-    MSB = 2;
-    beat = 4;
-    measure = 4;
+- (void) setData
+{
+    NSError *error;
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = 
+    [NSEntityDescription entityForName:@"Event" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    NSEntityDescription *searchEntity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:context];
+    [request setEntity:searchEntity];
+    NSPredicate *pred = 
+    [NSPredicate predicateWithFormat:@"(timeStamp = %@)", appDelegate.currentTimeStamp];
+    [request setPredicate:pred];
+    NSMutableArray *results = [[context executeFetchRequest:request error:&error]mutableCopy];
+    
+    if ([results count] == 0) {
+        NSLog(@"No results, setting defaults");
+        
+    }
+    else {
+        NSLog(@"\n\nSETTING DATA: %@\n\n", results);
+        
+        NSManagedObject *theObject = [results objectAtIndex:0];
+               
+        [theObject setValue:[NSNumber numberWithInt:LSB] forKey:@"lsb"];
+        [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
+
+        [theObject setValue:[NSNumber numberWithInt:MSB] forKey:@"msb"];
+        [MSBLabel setText:[NSString stringWithFormat:@"%d", MSB]];
+
+        [theObject setValue:[NSNumber numberWithInt:channel] forKey:@"channel"];
+        [_channelLabel setText:[NSString stringWithFormat:@"%d", channel]];
+
+        [theObject setValue:[NSNumber numberWithInt:tempo] forKey:@"tempo"];
+        [_tempoLabel setText:[NSString stringWithFormat:@"%d", tempo]];
+        
+        [theObject setValue:[NSNumber numberWithInt:beat] forKey:@"beat"];
+        [BeatLabel setText:[NSString stringWithFormat:@"%d", beat]];
+        
+        [theObject setValue:[NSNumber numberWithInt:measure] forKey:@"measure"];
+        [MeasureLabel setText:[NSString stringWithFormat:@"%d", measure]];
+        
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullstartNode.y] forKey:@"startNode"];
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullendNode.y] forKey:@"endNode"];
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullcp1.y] forKey:@"cp1y"];
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullcp2.y] forKey:@"cp2y"];
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullcp1.x] forKey:@"cp1x"];
+        [theObject setValue:[NSNumber numberWithDouble:paint.getfullcp2.x] forKey:@"cp2x"];
+        
+        [theObject setValue: _label.text forKey:@"bankLabel"];        
+
+    }
+}
+
+- (void)configureView
+{
+    [self getData];
+
     timeCounter = 0;
     if (self.detailItem) {
         self.detailDescriptionLabel.text = [self.detailItem description];
     }
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -541,6 +518,12 @@
     
 }
 
+- (void) setLSB: (NSString *) lsbval
+{
+    LSB = [lsbval integerValue];
+    [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
+}
+
 -(IBAction) changeMSB:(id)sender
 {
     UIStepper *stepper = (UIStepper *)sender;
@@ -564,6 +547,10 @@
     measure = (NSInteger) stepper.value;
     
     [MeasureLabel setText:[NSString stringWithFormat:@"%d", measure]];
+}
+
+- (IBAction) saveData:(id)sender{
+    [self setData];
 }
            
 -(IBAction) toggleHold:(id)sender

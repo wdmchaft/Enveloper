@@ -84,6 +84,13 @@
                                             <action selector="saveData:" destination="4" id="gZp-jc-HiF"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Play All" id="tTy-S4-JXM"/>
+                                    <barButtonItem systemItem="pause" id="640-yS-ceI">
+                                        <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
+                                        <connections>
+                                            <action selector="stopClock" destination="4" id="PBl-0X-amM"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" minimumFontSize="10" id="T4x-kp-VXf">

@@ -82,12 +82,17 @@
         NSManagedObject *theObject = [results objectAtIndex:0];
         LSB = [[theObject valueForKey:@"lsb"] intValue];
         [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
+        [LSBStepper setValue:LSB];
         
         MSB = [[theObject valueForKey:@"msb"] intValue];
         [MSBLabel setText:[NSString stringWithFormat:@"%d", MSB]];
+        [MSBStepper setValue:MSB];
+
         
         channel = [[theObject valueForKey:@"channel"] intValue];
         [_channelLabel setText:[NSString stringWithFormat:@"%d", channel]];
+        [channelStepper setValue:channel];
+
         
         tempo = [[theObject valueForKey:@"tempo"] intValue];
         tempoStepper.value = tempo;
@@ -95,9 +100,13 @@
         
         beat = [[theObject valueForKey:@"beat"] intValue];
         [BeatLabel setText:[NSString stringWithFormat:@"%d", beat]];
+        [BeatStepper setValue:beat];
+
         
         measure = [[theObject valueForKey:@"measure"] intValue];
         [MeasureLabel setText:[NSString stringWithFormat:@"%d", measure]];
+        [MeasureStepper setValue:measure];
+
         
         CGPoint startNode = CGPointMake(0.0f,[[theObject valueForKey:@"startNode"] doubleValue]);
         [paint setfullstartNode:startNode];

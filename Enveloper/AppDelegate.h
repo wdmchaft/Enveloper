@@ -10,7 +10,7 @@
 
 @class MasterViewController;
 @class DetailViewController;
-@class PGMidi;
+@class PGMidi; 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {

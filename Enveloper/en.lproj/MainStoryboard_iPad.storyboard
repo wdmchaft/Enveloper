@@ -30,6 +30,10 @@
                         <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.30000000000000004" contentMode="bottom" image="EnveloperCover.png" id="DQD-xV-xZN">
+                                <rect key="frame" x="-5" y="530" width="1029" height="130"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
                             <view autoresizesSubviews="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BMt-b1-1Ee">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="532"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -37,46 +41,37 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="b3Z-8R-UUR">
                                 <rect key="frame" x="0.0" y="660" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <rect key="contentStretch" x="0.0" y="1" width="1" height="1"/>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Dmb-n6-4h2"/>
                                     <barButtonItem systemItem="play" id="lw9-x7-A2v">
                                         <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                         <connections>
                                             <action selector="loop" destination="4" id="LSU-wC-1Bd"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="pause" id="IFH-Gr-23f">
+                                    <barButtonItem enabled="NO" systemItem="pause" id="IFH-Gr-23f">
                                         <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                         <connections>
                                             <action selector="stopLoop" destination="4" id="07F-Ih-2eZ"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="done" id="vPE-AX-fFx">
+                                    <barButtonItem enabled="NO" title="Edit Envelope" id="6ph-JF-JIh">
+                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="loop" destination="4" id="XpY-dC-htb"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Item" style="done" id="vPE-AX-fFx">
                                         <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="1" id="IsL-x3-QIq">
-                                            <rect key="frame" x="90" y="8" width="139" height="30"/>
+                                            <rect key="frame" x="509" y="8" width="139" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <segments>
                                                 <segment title="MIDI Learn"/>
                                                 <segment title="Hold"/>
                                             </segments>
-                                            <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
+                                            <color key="tintColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                         </segmentedControl>
-                                    </barButtonItem>
-                                    <barButtonItem title="Tempo: 120" id="QjW-7p-ZYd">
-                                        <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem title="Time Signature: 4 / 4" id="0qO-t3-4xf">
-                                        <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem title="Channel: 1" id="bbV-x2-YMq">
-                                        <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem title="Toggle Options" id="dHu-ne-E5T">
-                                        <color key="tintColor" red="0.50196081399917603" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </barButtonItem>
-                                    <barButtonItem title="List Interfaces" id="aja-i8-jtN">
-                                        <connections>
-                                            <action selector="listAllInterfaces" destination="4" id="oNR-ID-sNU"/>
-                                        </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Save" id="B62-ux-30G">
                                         <color key="tintColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -84,160 +79,111 @@
                                             <action selector="saveData:" destination="4" id="gZp-jc-HiF"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Play All" id="tTy-S4-JXM"/>
-                                    <barButtonItem systemItem="pause" id="640-yS-ceI">
-                                        <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
-                                        <connections>
-                                            <action selector="stopClock" destination="4" id="PBl-0X-amM"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Dik-ms-Nwp"/>
                                 </items>
                             </toolbar>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" minimumFontSize="10" id="T4x-kp-VXf">
-                                <rect key="frame" x="124" y="622" width="59" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.72282608699999995" green="0.72282608699999995" blue="0.72282608699999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="MIDI devices:" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="10" id="8Xu-3b-VeK">
-                                <rect key="frame" x="0.0" y="622" width="116" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="17"/>
-                                <color key="textColor" red="0.72282608699999995" green="0.72282608699999995" blue="0.72282608699999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" text="Midi Console" id="A2t-T0-Vpd">
-                                <rect key="frame" x="0.0" y="532" width="1024" height="128"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minimumValue="20" maximumValue="300" id="DQb-ZG-BNQ">
-                                <rect key="frame" x="237" y="628" width="94" height="27"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <action selector="setTempo:" destination="4" eventType="valueChanged" id="z8x-Qo-PSU"/>
-                                </connections>
-                            </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="120" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="vx4-n2-QgY">
-                                <rect key="frame" x="293" y="605" width="38" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Tempo:" lineBreakMode="tailTruncation" minimumFontSize="14" id="1UP-wL-Yay">
-                                <rect key="frame" x="237" y="605" width="60" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="16" id="gre-yd-8bT">
-                                <rect key="frame" x="478" y="628" width="94" height="27"/>
+                                <rect key="frame" x="442" y="584" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeChannel:" destination="4" eventType="valueChanged" id="vCc-tw-NaM"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="gZC-s7-PF4">
-                                <rect key="frame" x="539" y="605" width="33" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="1" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="ZJg-Rg-3wq">
+                                <rect key="frame" x="442" y="527" width="94" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Channel:" lineBreakMode="tailTruncation" minimumFontSize="14" id="jX7-m0-GXK">
-                                <rect key="frame" x="478" y="605" width="69" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="0" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="sVE-Pz-S5j">
+                                <rect key="frame" x="584" y="527" width="94" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2" maximumValue="127" id="70B-Ni-ZNE">
-                                <rect key="frame" x="589" y="569" width="94" height="27"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="0" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="dSs-Up-K0E">
+                                <rect key="frame" x="727" y="530" width="94" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Channel" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="20" id="GvD-ib-whH">
+                                <rect key="frame" x="442" y="615" width="94" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="127" id="70B-Ni-ZNE">
+                                <rect key="frame" x="584" y="584" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeLSB:" destination="4" eventType="valueChanged" id="C5C-Nr-YMu"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="g8f-Gk-ad9">
-                                <rect key="frame" x="645" y="546" width="33" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="LSB:" lineBreakMode="tailTruncation" minimumFontSize="14" id="zG6-Ur-euO">
-                                <rect key="frame" x="589" y="546" width="69" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2" maximumValue="127" id="twd-Wz-wBy">
-                                <rect key="frame" x="589" y="628" width="94" height="27"/>
+                                <rect key="frame" x="727" y="584" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeMSB:" destination="4" eventType="valueChanged" id="jBT-AW-cZ2"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="vzG-j5-LLG">
-                                <rect key="frame" x="645" y="605" width="33" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="MSB:" lineBreakMode="tailTruncation" minimumFontSize="14" id="pw0-2r-Id0">
-                                <rect key="frame" x="589" y="605" width="69" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minimumValue="1" maximumValue="20" id="O5Y-8A-gfG">
-                                <rect key="frame" x="359" y="569" width="94" height="27"/>
+                                <rect key="frame" x="202" y="584" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeBeat:" destination="4" eventType="valueChanged" id="ZIk-OU-kV5"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="4" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="JYx-vd-cSN">
-                                <rect key="frame" x="415" y="546" width="33" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="4" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="JYx-vd-cSN">
+                                <rect key="frame" x="202" y="527" width="94" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Beats:" lineBreakMode="tailTruncation" minimumFontSize="14" id="75H-h8-I2a">
-                                <rect key="frame" x="359" y="547" width="69" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="4" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="avN-kE-46u">
+                                <rect key="frame" x="304" y="527" width="94" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" text="/" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="26" id="CdD-kD-FUZ">
+                                <rect key="frame" x="254" y="530" width="94" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="26"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Time Signature" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="20" id="75H-h8-I2a">
+                                <rect key="frame" x="202" y="615" width="196" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minimumValue="1" maximumValue="20" id="4Oc-Ry-aGd">
-                                <rect key="frame" x="359" y="628" width="94" height="27"/>
+                                <rect key="frame" x="304" y="584" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="changeMeasure:" destination="4" eventType="valueChanged" id="dSD-gh-mVF"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="4" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="14" id="Msi-Wv-LKh">
-                                <rect key="frame" x="415" y="605" width="33" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="NRPN LSB" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="20" id="me1-10-DnW">
+                                <rect key="frame" x="583" y="615" width="97" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Measures:" lineBreakMode="tailTruncation" minimumFontSize="14" id="Mto-C2-ifh">
-                                <rect key="frame" x="359" y="605" width="69" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="NRPN MSB" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="20" id="tPv-dF-FBy">
+                                <rect key="frame" x="726" y="615" width="97" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -259,21 +205,21 @@
                     <connections>
                         <outlet property="BeatLabel" destination="JYx-vd-cSN" id="LRF-LV-4Xs"/>
                         <outlet property="BeatStepper" destination="O5Y-8A-gfG" id="YIA-Hc-3sI"/>
-                        <outlet property="LSBLabel" destination="g8f-Gk-ad9" id="Ulz-sr-nfP"/>
+                        <outlet property="LSBLabel" destination="sVE-Pz-S5j" id="KQP-de-pnj"/>
                         <outlet property="LSBStepper" destination="70B-Ni-ZNE" id="09Z-HC-6LB"/>
-                        <outlet property="MSBLabel" destination="vzG-j5-LLG" id="PQx-S2-IYw"/>
+                        <outlet property="MSBLabel" destination="dSs-Up-K0E" id="WCF-ha-5Y8"/>
                         <outlet property="MSBStepper" destination="twd-Wz-wBy" id="pXt-WY-hRo"/>
-                        <outlet property="MeasureLabel" destination="Msi-Wv-LKh" id="Vn4-EH-hEl"/>
+                        <outlet property="MeasureLabel" destination="avN-kE-46u" id="FoQ-ey-fGN"/>
                         <outlet property="MeasureStepper" destination="4Oc-Ry-aGd" id="gYg-Ne-MEk"/>
-                        <outlet property="channelLabel" destination="gZC-s7-PF4" id="YE5-SQ-PO4"/>
+                        <outlet property="apply" destination="6ph-JF-JIh" id="rkc-VO-FzR"/>
+                        <outlet property="channelLabel" destination="ZJg-Rg-3wq" id="wyG-ex-5jr"/>
                         <outlet property="channelStepper" destination="gre-yd-8bT" id="Psi-2f-nyA"/>
-                        <outlet property="countLabel" destination="T4x-kp-VXf" id="ku8-97-HMB"/>
                         <outlet property="graph" destination="BMt-b1-1Ee" id="yZ7-K6-67E"/>
                         <outlet property="holdSwitch" destination="IsL-x3-QIq" id="pWR-J5-kDQ"/>
                         <outlet property="label" destination="mEU-dS-DbN" id="PDz-MT-28T"/>
-                        <outlet property="tempoLabel" destination="vx4-n2-QgY" id="LMT-0P-ir9"/>
-                        <outlet property="tempoStepper" destination="DQb-ZG-BNQ" id="MHt-5q-SIh"/>
-                        <outlet property="textView" destination="A2t-T0-Vpd" id="OgT-Lw-efb"/>
+                        <outlet property="pause" destination="IFH-Gr-23f" id="Hfu-Up-wbE"/>
+                        <outlet property="play" destination="lw9-x7-A2v" id="zgT-u3-4do"/>
+                        <outlet property="save" destination="B62-ux-30G" id="YeE-6j-epQ"/>
                     </connections>
                 </viewController>
             </objects>
@@ -326,6 +272,9 @@
             <point key="canvasLocation" x="-20" y="-607"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="EnveloperCover.png" width="2048" height="1535"/>
+    </resources>
     <classes>
         <class className="DetailViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DetailViewController.h"/>
@@ -350,6 +299,7 @@
                 <relationship kind="outlet" name="MSBStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="MeasureLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="MeasureStepper" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="apply" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="channelLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="channelStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>
@@ -357,6 +307,10 @@
                 <relationship kind="outlet" name="graph" candidateClass="UIView"/>
                 <relationship kind="outlet" name="holdSwitch" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="label" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="midiLearn" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="pause" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="play" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="save" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="slidr" candidateClass="UISlider"/>
                 <relationship kind="outlet" name="tempoLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="tempoStepper" candidateClass="UIStepper"/>

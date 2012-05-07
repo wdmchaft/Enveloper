@@ -9,10 +9,11 @@
 #import "DetailViewController.h"
 #import "Event.h"
 
-@interface DetailViewController ()  <PGMidiDelegate, PGMidiSourceDelegate, NSFetchedResultsControllerDelegate>
+@interface DetailViewController ()  <NSFetchedResultsControllerDelegate>
 - (void) updateCountLabel;
 - (void) addString:(NSString*)string;
 - (void) sendMidiDataInBackground;
+- (void)midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList;
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
@@ -24,7 +25,7 @@
 #pragma mark PGMidiDelegate
 @synthesize countLabel;
 @synthesize textView;
-@synthesize midi;
+//@synthesize midi;
 
 @synthesize graph = _graph;
 @synthesize label = _label;
@@ -44,7 +45,8 @@
 @synthesize clockTimer;
 @synthesize loopTimer;
 @synthesize loopThread;
-@synthesize MeasureLabel, MeasureStepper, BeatLabel, BeatStepper;
+@synthesize MeasureLabel, MeasureStepper, BeatLabel, BeatStepper, pause, play, apply, save;
+@synthesize timeStamp = _timeStamp;
 
 
 
@@ -60,6 +62,7 @@
 {
     NSError *error;
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate setDetailViewController:self];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSEntityDescription *entityDesc = 
     [NSEntityDescription entityForName:@"Event" inManagedObjectContext:context];
@@ -74,12 +77,20 @@
     
     if ([results count] == 0) {
         NSLog(@"No results, setting defaults");
+        LSB = 0;
+        MSB = 0;
+        channel = 1;
+        beat = 4;
+        measure = 4;
         
     }
     else {
         NSLog(@"\n\nDETAIL VIEW CONTROLLER ALL DATA: %@\n\n", results);
         
         NSManagedObject *theObject = [results objectAtIndex:0];
+        
+        _timeStamp= [[theObject valueForKey:@"timeStamp"] description];
+        
         LSB = [[theObject valueForKey:@"lsb"] intValue];
         [LSBLabel setText:[NSString stringWithFormat:@"%d", LSB]];
         [LSBStepper setValue:LSB];
@@ -189,6 +200,22 @@
     if (self.detailItem) {
         self.detailDescriptionLabel.text = [self.detailItem description];
     }
+    
+    //AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    //[appDelegate setDetailViewController: self];
+    //looping = true;
+    
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    Boolean added = [appDelegate addTodvcArray: self];
+    if(!added){
+        [play setEnabled:FALSE];
+        [pause setEnabled:FALSE];
+        [apply setEnabled: TRUE];
+        //[_holdSwitch setEnabled:FALSE];
+        //[save setEnabled: FALSE];
+    }
 }
 
 
@@ -207,14 +234,9 @@
     paint = [[PaintView alloc] initWithFrame:_graph.bounds];
     [_graph addSubview:paint];
     
-    IF_IOS_HAS_COREMIDI
-    (
-     // We only create a MidiInput object on iOS versions that support CoreMIDI
-     midi = [[PGMidi alloc] init];
-     [midi enableNetwork:YES];
-     self.midi = midi;
-
-     )
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    if(midi == NULL)
+        midi = appDelegate.getMidi;
     
     [self configureView];
 }
@@ -224,6 +246,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -242,7 +265,7 @@
 	[super viewWillDisappear:animated];
     
     [self clearTextView];
-    [self updateCountLabel];
+    //[self updateCountLabel];
     
     IF_IOS_HAS_COREMIDI
     (
@@ -295,6 +318,19 @@
 {
     textView.text = nil;
 }
+- (void) addString:(NSString*)string
+{
+    NSString *newText = [textView.text stringByAppendingFormat:@"\n%@", string];
+    textView.text = newText;
+    
+    if (newText.length)
+        [textView scrollRangeToVisible:(NSRange){newText.length-1, 1}];
+}
+
+- (void) updateCountLabel
+{
+    countLabel.text = [NSString stringWithFormat:@"sources=%u destinations=%u", midi.sources.count, midi.destinations.count];
+}
 
 -(const char *)ToStringFromBool:(BOOL) b { return b ? "yes":"no"; }
 
@@ -305,6 +341,12 @@
 }
 - (IBAction) listAllInterfaces
 {
+    
+    if([textView isHidden])
+        [textView setHidden:FALSE];
+    else
+        [textView setHidden:TRUE];
+
     IF_IOS_HAS_COREMIDI
     ({
         [self addString:@"\n\nInterface list:"];
@@ -330,61 +372,8 @@
 
 #pragma mark Shenanigans
 
-- (void) attachToAllExistingSources
-{
-    for (PGMidiSource *source in midi.sources)
-    {
-        source.delegate = self;
-    }
-}
 
-- (void) setMidi:(PGMidi*)m
-{
-    midi.delegate = nil;
-    midi = m;
-    midi.delegate = self;
-    
-    [self attachToAllExistingSources];
-}
 
-- (void) addString:(NSString*)string
-{
-    NSString *newText = [textView.text stringByAppendingFormat:@"\n%@", string];
-    textView.text = newText;
-    
-    if (newText.length)
-        [textView scrollRangeToVisible:(NSRange){newText.length-1, 1}];
-}
-
-- (void) updateCountLabel
-{
-    countLabel.text = [NSString stringWithFormat:@"sources=%u destinations=%u", midi.sources.count, midi.destinations.count];
-}
-
-- (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
-{
-    source.delegate = self;
-    [self updateCountLabel];
-    [self addString:[NSString stringWithFormat:@"Source added: %@", [self ToString:source]]];
-}
-
-- (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
-{
-    [self updateCountLabel];
-    [self addString:[NSString stringWithFormat:@"Source removed: %@", [self ToString:source]]];
-}
-
-- (void) midi:(PGMidi*)midi destinationAdded:(PGMidiDestination *)destination
-{
-    [self updateCountLabel];
-    [self addString:[NSString stringWithFormat:@"Desintation added: %@", [self ToString:destination]]];
-}
-
-- (void) midi:(PGMidi*)midi destinationRemoved:(PGMidiDestination *)destination
-{
-    [self updateCountLabel];
-    [self addString:[NSString stringWithFormat:@"Desintation removed: %@", [self ToString:destination]]];
-}
 
 -(NSString *)StringFromPacket:(const MIDIPacket *)packet
 {
@@ -427,7 +416,7 @@
          */   
             
             /* Set LSB and MSB to non-time clock or noteOn/Off start/stop signals */
-            NSLog(@"midi received");
+            //NSLog(@"midi received");
             
            
                 NSString * packetString = [self StringFromPacket:packet];
@@ -440,7 +429,7 @@
                         [LSBLabel performSelectorOnMainThread:@selector(setText:)
                                                    withObject: [NSString stringWithFormat:@"%d", LSB]
                                                 waitUntilDone:NO];
-                        NSLog(@"\n\nMIDI PACKET: %@, LSB: %d", packetString, LSB);
+                        //NSLog(@"\n\nMIDI PACKET: %@, LSB: %d", packetString, LSB);
 
                     }
                     else if( [self IntFromPacket:packet withIndex:1] == 99){
@@ -449,13 +438,15 @@
                         [MSBLabel performSelectorOnMainThread:@selector(setText:)
                                                withObject: [NSString stringWithFormat:@"%d", MSB]
                                             waitUntilDone:NO];
-                        NSLog(@"\n\nMIDI PACKET: %@, MSB: %d", packetString, MSB);
+                        //NSLog(@"\n\nMIDI PACKET: %@, MSB: %d", packetString, MSB);
                     }
                     }
 
                 } else{
                     if(looping){ 
-                        [self performSelectorInBackground:@selector(sendSweepFromGraph) withObject:nil];
+                        //[self performSelectorInBackground:@selector(sendSweepFromGraph) withObject:nil];
+                        //[self performSelectorOnMainThread:@selector(sendSweepFromGraph) withObject:nil waitUntilDone: NO];
+                        [self sendSweepFromGraph];
                     }
                 }
         
@@ -570,8 +561,20 @@
 
 - (IBAction) loop{
     
+    [self stopLoop];
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate addTodvcArray: self];
+    
     looping = true;
     timeCounter = 0;
+    
+    [pause setEnabled:TRUE];
+    [play setEnabled:FALSE];
+    [apply setEnabled: FALSE];
+    [_holdSwitch setEnabled:TRUE];
+    [save setEnabled: TRUE];
+
     
     //[self performSelectorOnMainThread:@selector(sendMidiSweepInBG) withObject:nil waitUntilDone:NO];
     //loopThread = [[NSThread alloc] initWithTarget:self selector:@selector(sendMidiSweepInBG) object:nil];
@@ -646,12 +649,143 @@
     
 }
 
+// cubic equation solver example using Cardano's method
+#define THIRD 0.333333333333333
+#define ROOTTHREE 1.73205080756888        
+
+
+// this function returns the cube root if x were a negative number aswell
+double cubeRoot(double x)
+{
+    if (x < 0)
+        return -pow(-x, THIRD);
+    else
+        return pow(x, THIRD);
+}
+
+double solveCubic(double a, double b, double c, double d)
+{
+    // find the discriminant
+    double f, g, h;
+    f = (3 * c / a - pow(b, 2) / pow(a, 2)) / 3;
+    g = (2 * pow(b, 3) / pow(a, 3) - 9 * b * c / pow(a, 2) + 27 * d / a) / 27;
+    h = pow(g, 2) / 4 + pow(f, 3) / 27;
+    // evaluate discriminant
+    if (f == 0 && g == 0 && h == 0)
+    {
+        // 3 equal roots
+        double x;
+        // when f, g, and h all equal 0 the roots can be found by the following line
+        x = -cubeRoot(d / a);
+        // print solutions
+        if(x >= 0 && x <= 1)
+            return x;
+        NSLog(@"\n\n3 equal roots: %f", x); 
+    }
+    else if (h <= 0)
+    {
+        // 3 real roots
+        double q, i, j, k, l, m, n, p;
+        // complicated maths making use of the method
+        i = pow(pow(g, 2) / 4 - h, 0.5);
+        j = cubeRoot(i);
+        k = acos(-(g / (2 * i)));
+        m = cos(k / 3);
+        n = ROOTTHREE * sin(k / 3);
+        p = -(b / (3 * a));
+        // print solutions
+        
+        double rt1 = 2 * j * m + p;
+        double rt2 = -j * (m + n) + p;
+        double rt3 = -j * (m - n) + p;
+        
+        NSLog(@"\n\n3 real roots: %f, %f, %f", rt1, rt2, rt3); 
+        
+        if(rt1 >= 0 && rt1 <= 1)
+           return rt1;
+        else if(rt2 >= 0 && rt2 <= 1)
+            return rt2;
+        else {
+            return rt3;
+        }
+    }
+    else if (h > 0)
+    {
+        // 1 real root and 2 complex roots
+        double r, s, t, u, p;
+        // complicated maths making use of the method
+        r = -(g / 2) + pow(h, 0.5);
+        s = cubeRoot(r);
+        t = -(g / 2) - pow(h, 0.5);
+        u = cubeRoot(t);
+        p = -(b / (3 * a));
+        // print solutions
+        double rt1 = (s + u) + p;
+        if(rt1 >= 0 && rt1 <= 1)
+            return rt1;
+        NSLog(@"\n\n1 real root and 2 complex roots: %f", (s + u) + p); 
+    }
+    
+    return 0;
+}
+
+- (NSInteger) getSplineVal: (double) t{
+    
+    double m = [paint getcp1X];
+    double n = [paint getcp2X];
+    
+    double a;
+    double b;
+    double c;
+    double d;
+    a = 1;
+    b = (-6*m + 3*n) / (3*m - 3*n + 1);
+    c = 3*m / (3*m - 3*n + 1);
+    d = -t / (3*m - 3*n + 1);
+    
+    t = solveCubic( a,  b,  c,  d);
+
+    
+    //t = sol;
+        
+    //Get y value from t(x)
+    NSInteger sliderVal = pow((1-t),3)*paint.getStartNode +
+    3*pow((1-t),2)*t*paint.getcp1 +
+    3*(1-t)*pow(t,2)*paint.getcp2 +
+    pow(t,3)*paint.getEndNode;
+    
+    return sliderVal;
+}
+
+-(CGRect) getIndicatorPoint{
+    int timesig = 24 * beat * measure;
+    double timesigD = 24 * beat * measure;
+    double t = (timeCounter%timesig) / timesigD;
+    
+    
+    NSInteger sliderVal = [self getSplineVal:t];
+   /* NSInteger sliderVal = pow((1-t),3)*paint.getStartNode +
+    3*pow((1-t),2)*t*paint.getcp1 +
+    3*(1-t)*pow(t,2)*paint.getcp2 +
+    pow(t,3)*paint.getEndNode;
+    */
+    NSLog(@"\n\n%g, %g",t*paint.frame.size.width, sliderVal*paint.frame.size.height);
+    
+    return CGRectMake(t*paint.frame.size.width, (1-sliderVal/127.0)*paint.frame.size.height,paint.frame.size.width/50.0f,paint.frame.size.width/50.0);
+    
+}
+
 -(void) sendSweepFromGraph{
     
     if(looping){
         int timesig = 24 * beat * measure;
         double timesigD = 24 * beat * measure;
         double t = (timeCounter%timesig) / timesigD;
+        
+        [paint setIndicatorPoint: [self getIndicatorPoint]];
+        [paint setNeedsDisplay];
+        if(t==0)
+            timeCounter = 0;
         timeCounter++;
         
         //Out of 384 for 24 ticks per quarter note * 16 q notes
@@ -659,19 +793,19 @@
         //Run this on a background thread
         
         //Get slider value from datastore @ index, where index is ID
-        NSInteger sliderVal = pow((1-t),3)*paint.getStartNode +
+        /*NSInteger sliderVal = pow((1-t),3)*paint.getStartNode +
             3*pow((1-t),2)*t*paint.getcp1 +
             3*(1-t)*pow(t,2)*paint.getcp2 +
             pow(t,3)*paint.getEndNode;
-                    
+          */          
+        
+        NSInteger sliderVal = [self getSplineVal:t];
+
+        
         int bit1 = 0xB0 + channel - 1;
         
         //SInt32 latencyTime;
         //OSStatus result = MIDIObjectGetIntegerProperty(&midi, kMIDIPropertyAdvanceScheduleTimeMuSec, &latencyTime);
-        uint64_t time = mach_absolute_time();
-
-        const UInt8 tick[]      = {248};
-        [midi sendQueuedMidi: tick size:sizeof(tick) atTime:time];       
         
         const UInt8 LSBPacket[]      = {bit1, 98, LSB};
         [midi sendBytes:LSBPacket size:sizeof(LSBPacket)];  
@@ -705,7 +839,7 @@
         [midi sendBytes:Data2 size:sizeof(Data)];
          */
         
-        NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
+       // NSLog(@"\n\nSLIDER %d LSB %d MSB %d\n", sliderVal, LSB, MSB);
     }
 }
 
@@ -719,8 +853,19 @@
 
 - (IBAction)stopLoop{
     looping = false;
+    [pause setEnabled:FALSE];
+    [play setEnabled:TRUE];
+    [apply setEnabled: FALSE];
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    for (int i=0; i<[appDelegate getdvcArrayCount]; i++){
+        [appDelegate removefromdvcArray: self atIndex:i];
+
+    }
+    /*
     const UInt8 stop[]     = {252};
     [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];
+     */
     [loopTimer invalidate];
 }
 

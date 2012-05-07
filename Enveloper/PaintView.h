@@ -17,9 +17,11 @@
     CGPoint cp1;
     CGPoint cp2;
     CGPoint endNode;
-    
-    double nodeSize;
         
+    double nodeSize;
+    
+    CGRect indicatorPoint;
+            
     NSMutableArray * nodes;
 }
 
@@ -28,6 +30,11 @@
 - (NSInteger) getStartNode;
 - (NSInteger) getcp1;
 - (NSInteger) getcp2;
+- (NSInteger) getEndNode;
+- (double) getStartNodeX;
+- (double) getcp1X;
+- (double) getcp2X;
+- (double) getEndNodeX;
 
 - (CGPoint) getfullcp1;
 - (CGPoint) getfullcp2;
@@ -38,7 +45,8 @@
 - (void) setfullcp1: (CGPoint) point;
 - (void) setfullcp2: (CGPoint) point;
 
-- (NSInteger) getEndNode;
+- (void) setIndicatorPoint: (CGRect) indic;
+
 - (bool) isInControlPoint: (CGPoint) cp atTouch: (CGPoint) touchPoint;
 
 @end

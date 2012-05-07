@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PGMidi.h"
+#import "iOSVersionDetection.h"
+#import <CoreMIDI/CoreMIDI.h>
 
 @class MasterViewController;
 @class DetailViewController;
@@ -19,6 +22,8 @@
     MasterViewController      *masterViewController;
     PGMidi                    *midi;
     NSDate                    *currentTimeStamp;
+    NSMutableArray            *dvcArray;
+    
 }
 
 @property (strong, nonatomic) NSDate *currentTimeStamp;
@@ -28,6 +33,19 @@
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
 @property (nonatomic, retain) IBOutlet MasterViewController *masterViewController;
 
+@property (nonatomic,strong) PGMidi *midi;
+@property (nonatomic,strong) NSMutableArray *dvcArray;
+- (Boolean) addTodvcArray: (DetailViewController *) dvc;
+- (void) removefromdvcArray: (DetailViewController *) dvc atIndex: (NSInteger) i;
+- (NSInteger) getdvcArrayCount;
+- (Boolean) isdvc : (DetailViewController *) dvc inArrayAtIndex: (NSInteger) index;
+- (DetailViewController *) getdvcAtIndex: (NSInteger) i;
+- (DetailViewController *) getCurrentdvc;
+
+- (const char *) ToStringFromBool:(BOOL) b;
+- (NSString*) ToString:(PGMidiConnection*) connection;
+- (NSString *)StringFromPacket:(const MIDIPacket *)packet;
+
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -35,6 +53,7 @@
 
 
 - (void)saveContext;
+- (PGMidi *)getMidi;
 - (NSURL *)applicationDocumentsDirectory;
 
 @end

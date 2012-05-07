@@ -22,17 +22,14 @@
         
         startNode.x = 0.0;
         endNode.x = frame.size.width;
-        
-        //startNode = CGPointMake(0.0f,0.0f);
-        //endNode = CGPointMake(frame.size.width, frame.size.height);
-        //cp1 = CGPointMake(frame.size.width/4.0, frame.size.height/4.0);
-        //cp2 = CGPointMake(frame.size.width*3.0/4.0, frame.size.height*3.0/4.0);
+
         [nodes addObject:[NSValue valueWithCGPoint:startNode]];
         [nodes addObject:[NSValue valueWithCGPoint:endNode]];
         [nodes addObject:[NSValue valueWithCGPoint:cp1]];
         [nodes addObject:[NSValue valueWithCGPoint:cp2]];
         
-        //[self drawToCache];
+        indicatorPoint = CGRectMake(0, 0, nodeSize/2.0f, nodeSize/2.0f);
+        
     }
     return self;
 }
@@ -118,7 +115,7 @@
 
 - (bool) isInControlPoint: (CGPoint) cp atTouch: (CGPoint) touchPoint
 {
-    double nodeRange = nodeSize*2;
+    double nodeRange = nodeSize;
     if(touchPoint.x < cp.x + nodeRange && touchPoint.x > cp.x - nodeRange && touchPoint.y < cp.y + nodeRange && touchPoint.y > cp.y - nodeRange)
        return true;
     else 
@@ -128,7 +125,7 @@
 - (void) drawControlPoint:(CGPoint)point{
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextSetRGBFillColor(context, 0.0, 0.9, 0.1, 0.9);
     CGContextFillEllipseInRect(context, CGRectMake(point.x-nodeSize/2.0f,point.y-nodeSize/2.0f,nodeSize,nodeSize));
 
 }
@@ -170,21 +167,45 @@
     [self drawControlPoint:cp2];
     [self drawControlPoint:endNode];
     
+    /* Draw the Indicator */
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 0.5, 0.5);
+    CGContextFillEllipseInRect(context, indicatorPoint);
+    
     CGImageRelease(cacheImage);
+    
 }
 
 - (NSInteger) getStartNode{
-    return startNode.y/self.frame.size.height* 127;
+    return 127 - (startNode.y/self.frame.size.height* 127);
 }
 
 - (NSInteger) getcp1{
-    return cp1.y/self.frame.size.height* 127;
+    return 127 - (cp1.y/self.frame.size.height* 127);
 }
 
 - (NSInteger) getcp2{
-    return cp2.y/self.frame.size.height* 127;
+    return 127 - (cp2.y/self.frame.size.height* 127);
 }
 
+- (NSInteger) getEndNode{
+    return 127 - (endNode.y/self.frame.size.height* 127);
+}
+
+- (double) getStartNodeX{
+    return (startNode.x/self.frame.size.width);
+}
+
+- (double) getcp1X{
+    return (cp1.x/self.frame.size.width);
+}
+
+- (double) getcp2X{
+    return (cp2.x/self.frame.size.width);
+}
+
+- (double) getEndNodeX{
+    return (endNode.x/self.frame.size.width);
+}
 - (CGPoint) getfullstartNode{
     CGPoint result = startNode;
     result.x = result.x / self.frame.size.width;
@@ -237,8 +258,10 @@
     cp2 = point;
 }
 
-- (NSInteger) getEndNode{
-    return endNode.y/self.frame.size.height* 127;
+- (void) setIndicatorPoint: (CGRect) indic{
+    indicatorPoint = indic;
 }
+
+
 
 @end

@@ -7,15 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PaintView.h"
-#import "PGMidi.h"
-#import "iOSVersionDetection.h"
-#import <CoreMIDI/CoreMIDI.h>
+
+
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
 #import "AppDelegate.h"
-
+#import "PaintView.h"
 
 @class PGMidi;
 
@@ -51,8 +49,6 @@
 @property (nonatomic,strong) IBOutlet UILabel    *countLabel;
 @property (nonatomic,strong) IBOutlet UITextView *textView;
 
-@property (nonatomic,strong) PGMidi *midi;
-
 #endif
 
 - (IBAction) clearTextView;
@@ -63,6 +59,8 @@
 - (const char *) ToStringFromBool:(BOOL) b;
 - (NSString*) ToString:(PGMidiConnection*) connection;
 - (NSString *)StringFromPacket:(const MIDIPacket *)packet;
+
+- (void)midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList;
 
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) IBOutlet UIView *graph;
@@ -82,11 +80,20 @@
 @property (strong, nonatomic) IBOutlet UIStepper *MeasureStepper;
 @property (strong, nonatomic) IBOutlet UILabel *MeasureLabel;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *holdSwitch;
+
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *pause;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *play;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *apply;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *save;
+
+
+
 @property (strong, nonatomic) NSTimer * clockTimer;
 @property (strong, nonatomic) NSTimer * loopTimer;
 @property (strong, nonatomic) NSThread * loopThread;
+@property (strong, nonatomic) NSString  *timeStamp;
 
-
+- (CGRect) getIndicatorPoint;
 
 - (IBAction) sliderChanged : (id)sender;
 - (IBAction) sendMidiDataFromSlider: (NSInteger)sliderVal;
@@ -96,6 +103,8 @@
 - (IBAction) changeBeat:(id)sender;
 - (IBAction) changeMeasure:(id)sender;
 - (IBAction) saveData:(id)sender;
+
+
 
 //Setters
 - (void) setLSB: (NSString *) lsbval;

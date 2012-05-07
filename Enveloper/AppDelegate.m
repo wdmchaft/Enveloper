@@ -14,6 +14,10 @@
 #import "iOSVersionDetection.h"
 #import "PGArc.h"
 
+@interface AppDelegate ()  <PGMidiDelegate, PGMidiSourceDelegate>
+
+@end
+
 @implementation AppDelegate 
 
 @synthesize currentTimeStamp;
@@ -22,6 +26,7 @@
 @synthesize detailViewController = _detailViewController;
 @synthesize masterViewController = _masterViewController;
 
+@synthesize midi, dvcArray;
 
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
@@ -49,6 +54,17 @@
         masterViewController = (MasterViewController *)navigationController.topViewController;
         masterViewController.managedObjectContext = self.managedObjectContext;
     //}
+    
+    IF_IOS_HAS_COREMIDI
+    (
+     // We only create a MidiInput object on iOS versions that support CoreMIDI
+     midi = [[PGMidi alloc] init];
+     [midi enableNetwork:YES];
+     self.midi = midi;
+     
+     )
+    
+    dvcArray =[[NSMutableArray alloc] initWithObjects:nil];
 
     
     return YES;
@@ -192,6 +208,147 @@
     
     return __persistentStoreCoordinator;
 }
+
+- (PGMidi *)getMidi{
+    return midi;
+}
+
+
+- (void) setMidi:(PGMidi*)m
+{
+    midi.delegate = nil;
+    midi = m;
+    midi.delegate = self;
+    
+    [self attachToAllExistingSources];
+}
+
+- (void) attachToAllExistingSources
+{
+    for (PGMidiSource *source in midi.sources)
+    {
+        source.delegate = self;
+    }
+}
+
+/*
+
+*/
+
+- (void) midi:(PGMidi*)midi sourceAdded:(PGMidiSource *)source
+{
+    source.delegate = self;
+    NSLog(@"Source Removed");
+    //[self updateCountLabel];
+    //[self addString:[NSString stringWithFormat:@"Source added: %@", [self ToString:source]]];
+}
+
+- (void) midi:(PGMidi*)midi sourceRemoved:(PGMidiSource *)source
+{
+    NSLog(@"Source Removed");
+    //[self updateCountLabel];
+    //[self addString:[NSString stringWithFormat:@"Source removed: %@", [self ToString:source]]];
+}
+
+- (void) midi:(PGMidi*)midi destinationAdded:(PGMidiDestination *)destination
+{
+    NSLog(@"destinationAdded");
+    //[self updateCountLabel];
+    //[self addString:[NSString stringWithFormat:@"Desintation added: %@", [self ToString:destination]]];
+}
+
+- (void) midi:(PGMidi*)midi destinationRemoved:(PGMidiDestination *)destination
+{
+    NSLog(@"destinationRemoved");
+
+    //[self updateCountLabel];
+    //[self addString:[NSString stringWithFormat:@"Desintation removed: %@", [self ToString:destination]]];
+}
+
+- (void)midiSource:(PGMidiSource*)themidi midiReceived:(const MIDIPacketList *)packetList{
+    NSLog(@"\n\nmidiReceived count is %d\n\n", dvcArray.count);
+    
+    for (int i=0; i<[self getdvcArrayCount]; i++){
+        DetailViewController * current = [dvcArray objectAtIndex:i];
+        [current midiSource:themidi midiReceived:packetList];
+    }
+}
+
+-(const char *)ToStringFromBool:(BOOL) b { return b ? "yes":"no"; }
+
+-(NSString *)ToString:(PGMidiConnection *) connection
+{
+    return [NSString stringWithFormat:@"< PGMidiConnection: name=%@ isNetwork=%s >",
+            connection.name, [self ToStringFromBool: connection.isNetworkSession]];
+}
+
+-(NSString *)StringFromPacket:(const MIDIPacket *)packet
+{
+    // Note - this is not an example of MIDI parsing. I'm just dumping
+    // some bytes for diagnostics.
+    // See comments in PGMidiSourceDelegate for an example of how to
+    // interpret the MIDIPacket structure.
+    return [NSString stringWithFormat:@"  %u bytes: [%02x,%02x,%02x]",
+            packet->length,
+            (packet->length > 0) ? packet->data[0] : 0,
+            (packet->length > 1) ? packet->data[1] : 0,
+            (packet->length > 2) ? packet->data[2] : 0
+            ];
+}
+
+-(NSInteger)IntFromPacket:(const MIDIPacket *)packet withIndex:(NSInteger)index
+{
+    // Note - this is not an example of MIDI parsing. I'm just dumping
+    // some bytes for diagnostics.
+    // See comments in PGMidiSourceDelegate for an example of how to
+    // interpret the MIDIPacket structure.
+    return (packet->length > index) ? packet->data[index] : 0;
+}
+
+- (Boolean) addTodvcArray: (DetailViewController *) dvc{
+    Boolean exists = false;
+    for (int i=0; i<[self getdvcArrayCount]; i++){
+        if([self isdvc:dvc inArrayAtIndex: i]){
+            exists = true;   
+        }
+    }
+    if(!exists){
+        [dvcArray addObject:dvc];
+        return true;
+    }
+    return false;
+}
+
+- (DetailViewController *) getdvcAtIndex: (NSInteger) i{
+    if(i<[self getdvcArrayCount]){
+        return [dvcArray objectAtIndex:i];
+    } else
+        return NULL;
+}
+
+
+- (void) removefromdvcArray: (DetailViewController *) dvc atIndex: (NSInteger) i{
+    if([self isdvc:dvc inArrayAtIndex: i]){
+        [dvcArray removeObjectAtIndex: i];
+    }
+}
+
+- (NSInteger) getdvcArrayCount{
+    return dvcArray.count;
+}
+
+- (Boolean) isdvc : (DetailViewController *) dvc inArrayAtIndex: (NSInteger) index {
+    DetailViewController * current = [dvcArray objectAtIndex:index];
+    if([current.timeStamp isEqualToString:dvc.timeStamp])
+        return true;
+    else
+        return false;
+}
+
+- (DetailViewController *) getCurrentdvc{
+    return detailViewController;
+}
+
 
 #pragma mark - Application's Documents directory
 

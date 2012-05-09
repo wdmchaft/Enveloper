@@ -24,6 +24,9 @@
     NSDate                    *currentTimeStamp;
     NSMutableArray            *dvcArray;
     
+    PGMidiSource              *currmidi;
+    const MIDIPacketList * currpacketList;
+    
 }
 
 @property (strong, nonatomic) NSDate *currentTimeStamp;
@@ -35,6 +38,9 @@
 
 @property (nonatomic,strong) PGMidi *midi;
 @property (nonatomic,strong) NSMutableArray *dvcArray;
+
+- (void) midiWrapper: (NSDictionary *)args;
+
 - (Boolean) addTodvcArray: (DetailViewController *) dvc;
 - (void) removefromdvcArray: (DetailViewController *) dvc atIndex: (NSInteger) i;
 - (NSInteger) getdvcArrayCount;

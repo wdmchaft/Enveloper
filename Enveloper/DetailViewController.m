@@ -28,6 +28,7 @@
 //@synthesize midi;
 
 @synthesize graph = _graph;
+@synthesize disabler = _disabler;
 @synthesize label = _label;
 @synthesize holdSwitch = _holdSwitch;
 @synthesize tempoLabel = _tempoLabel;
@@ -203,7 +204,6 @@
     
     //AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     //[appDelegate setDetailViewController: self];
-    //looping = true;
     
     
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -213,8 +213,10 @@
         [play setEnabled:FALSE];
         [pause setEnabled:FALSE];
         [apply setEnabled: TRUE];
-        //[_holdSwitch setEnabled:FALSE];
-        //[save setEnabled: FALSE];
+        [_holdSwitch setEnabled:FALSE];
+        [save setEnabled: FALSE];
+        [_disabler setHidden:FALSE];
+        //looping = true;
     }
 }
 
@@ -265,7 +267,14 @@
 	[super viewWillDisappear:animated];
     
     [self clearTextView];
-    //[self updateCountLabel];
+    
+    if(!looping){
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        for (int i=0; i<[appDelegate getdvcArrayCount]; i++){
+            [appDelegate removefromdvcArray: self atIndex:i];
+        }
+    }
+    
     
     IF_IOS_HAS_COREMIDI
     (
@@ -285,7 +294,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     
+    if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+        return YES;
+    
     return NO;
+    //return NO;
     
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -293,7 +306,6 @@
     } else {
         return YES;
     }
-     
 }
 
 #pragma mark - Split view
@@ -401,12 +413,7 @@
 - (void)midiSource:(PGMidiSource*)midi midiReceived:(const MIDIPacketList *)packetList
 {
     
-    //if(![_holdSwitch isOn]){
-        /*
-        [self performSelectorOnMainThread:@selector(addString:)
-                               withObject:@"MIDI received:"
-                            waitUntilDone:NO];
-        */
+
         const MIDIPacket *packet = &packetList->packet[0];
         for (int i = 0; i < packetList->numPackets; ++i)
         {
@@ -454,7 +461,6 @@
             /*Make function to calculate tempo */
             packet = MIDIPacketNext(packet);
         }
-    //}
 }
 
 - (void) sendMidiDataInBackground
@@ -555,8 +561,14 @@
            
 -(IBAction) toggleHold:(id)sender
 {
+    if([_holdSwitch selectedSegmentIndex] == 0){
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        
+        [appDelegate addTodvcArray: self];
+    }
+
     //UISwitch * theSwitch = (UISwitch *)sender;
-    //_holdSwitch.on = theSwitch.on;
+    
 }
 
 - (IBAction) loop{
@@ -762,17 +774,22 @@ double solveCubic(double a, double b, double c, double d)
     double timesigD = 24 * beat * measure;
     double t = (timeCounter%timesig) / timesigD;
     
+    return CGRectMake(t*paint.frame.size.width, paint.frame.size.height - paint.frame.size.width/50.0,paint.frame.size.width/250.0f,paint.frame.size.width/50.0);
+
+}
+
+-(CGRect) getIndicatorPoint2{
+    int timesig = 24 * beat * measure;
+    double timesigD = 24 * beat * measure;
+    double t = (timeCounter%timesig) / timesigD;
     
     NSInteger sliderVal = [self getSplineVal:t];
-   /* NSInteger sliderVal = pow((1-t),3)*paint.getStartNode +
-    3*pow((1-t),2)*t*paint.getcp1 +
-    3*(1-t)*pow(t,2)*paint.getcp2 +
-    pow(t,3)*paint.getEndNode;
-    */
-    NSLog(@"\n\n%g, %g",t*paint.frame.size.width, sliderVal*paint.frame.size.height);
     
-    return CGRectMake(t*paint.frame.size.width, (1-sliderVal/127.0)*paint.frame.size.height,paint.frame.size.width/50.0f,paint.frame.size.width/50.0);
-    
+    return CGRectMake(t*paint.frame.size.width, (1-sliderVal/127.0)*paint.frame.size.height,paint.frame.size.width/250.0f,paint.frame.size.width/250.0);    
+}
+
+-(void) setNeedsDisp{
+    [paint setNeedsDisplay];
 }
 
 -(void) sendSweepFromGraph{
@@ -783,7 +800,10 @@ double solveCubic(double a, double b, double c, double d)
         double t = (timeCounter%timesig) / timesigD;
         
         [paint setIndicatorPoint: [self getIndicatorPoint]];
-        [paint setNeedsDisplay];
+        [paint setIndicatorPoint2: [self getIndicatorPoint2]];
+        [self performSelectorOnMainThread:@selector(setNeedsDisp) withObject:nil waitUntilDone:NO];
+
+        
         if(t==0)
             timeCounter = 0;
         timeCounter++;
@@ -856,12 +876,18 @@ double solveCubic(double a, double b, double c, double d)
     [pause setEnabled:FALSE];
     [play setEnabled:TRUE];
     [apply setEnabled: FALSE];
-    
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    for (int i=0; i<[appDelegate getdvcArrayCount]; i++){
-        [appDelegate removefromdvcArray: self atIndex:i];
+    [_holdSwitch setEnabled:TRUE];
+    [_disabler setHidden:TRUE];
 
+    if([_holdSwitch selectedSegmentIndex] != 0){
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        for (int i=0; i<[appDelegate getdvcArrayCount]; i++){
+            [appDelegate removefromdvcArray: self atIndex:i];
+        }
     }
+    
+    //[appDelegate addTodvcArray: self];
+
     /*
     const UInt8 stop[]     = {252};
     [midi sendQueuedMidi: stop size:sizeof(stop) atTime:mach_absolute_time()];

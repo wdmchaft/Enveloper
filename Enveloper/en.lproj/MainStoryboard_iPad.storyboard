@@ -44,6 +44,12 @@
                                 <rect key="contentStretch" x="0.0" y="1" width="1" height="1"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Dmb-n6-4h2"/>
+                                    <barButtonItem enabled="NO" title="Edit Envelope" id="6ph-JF-JIh">
+                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="loop" destination="4" id="Nsw-pz-S1x"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem systemItem="play" id="lw9-x7-A2v">
                                         <color key="tintColor" red="0.0039215688589999999" green="0.4274510145" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                         <connections>
@@ -56,12 +62,6 @@
                                             <action selector="stopLoop" destination="4" id="07F-Ih-2eZ"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem enabled="NO" title="Edit Envelope" id="6ph-JF-JIh">
-                                        <color key="tintColor" red="0.50196081400000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="loop" destination="4" id="XpY-dC-htb"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem title="Item" style="done" id="vPE-AX-fFx">
                                         <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="1" id="IsL-x3-QIq">
                                             <rect key="frame" x="509" y="8" width="139" height="30"/>
@@ -71,6 +71,9 @@
                                                 <segment title="Hold"/>
                                             </segments>
                                             <color key="tintColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="toggleHold:" destination="4" eventType="valueChanged" id="Y7d-78-bzq"/>
+                                            </connections>
                                         </segmentedControl>
                                     </barButtonItem>
                                     <barButtonItem title="Save" id="B62-ux-30G">
@@ -187,6 +190,11 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" alpha="0.50000000000000011" contentMode="scaleToFill" id="vSm-nk-3Gc">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="660"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -214,6 +222,7 @@
                         <outlet property="apply" destination="6ph-JF-JIh" id="rkc-VO-FzR"/>
                         <outlet property="channelLabel" destination="ZJg-Rg-3wq" id="wyG-ex-5jr"/>
                         <outlet property="channelStepper" destination="gre-yd-8bT" id="Psi-2f-nyA"/>
+                        <outlet property="disabler" destination="vSm-nk-3Gc" id="d75-vG-crm"/>
                         <outlet property="graph" destination="BMt-b1-1Ee" id="yZ7-K6-67E"/>
                         <outlet property="holdSwitch" destination="IsL-x3-QIq" id="pWR-J5-kDQ"/>
                         <outlet property="label" destination="mEU-dS-DbN" id="PDz-MT-28T"/>
@@ -304,10 +313,10 @@
                 <relationship kind="outlet" name="channelStepper" candidateClass="UIStepper"/>
                 <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="detailDescriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="disabler" candidateClass="UIView"/>
                 <relationship kind="outlet" name="graph" candidateClass="UIView"/>
                 <relationship kind="outlet" name="holdSwitch" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="label" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="midiLearn" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="pause" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="play" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="save" candidateClass="UIBarButtonItem"/>

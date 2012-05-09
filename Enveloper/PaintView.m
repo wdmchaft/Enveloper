@@ -125,7 +125,7 @@
 - (void) drawControlPoint:(CGPoint)point{
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetRGBFillColor(context, 0.0, 0.9, 0.1, 0.9);
+    CGContextSetRGBFillColor(context, 1.0, 0.9, 0.1, 1.0);
     CGContextFillEllipseInRect(context, CGRectMake(point.x-nodeSize/2.0f,point.y-nodeSize/2.0f,nodeSize,nodeSize));
 
 }
@@ -168,8 +168,12 @@
     [self drawControlPoint:endNode];
     
     /* Draw the Indicator */
-    CGContextSetRGBFillColor(context, 1.0, 1.0, 0.5, 0.5);
-    CGContextFillEllipseInRect(context, indicatorPoint);
+    if(indicatorPoint.origin.x != 0){
+        CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+        //CGContextFillEllipseInRect(context, indicatorPoint);
+        CGContextFillRect(context, indicatorPoint);
+        CGContextFillRect(context, indicatorPoint2);
+    }
     
     CGImageRelease(cacheImage);
     
@@ -260,6 +264,10 @@
 
 - (void) setIndicatorPoint: (CGRect) indic{
     indicatorPoint = indic;
+}
+
+- (void) setIndicatorPoint2: (CGRect) indic{
+    indicatorPoint2 = indic;
 }
 
 

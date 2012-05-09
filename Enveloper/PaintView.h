@@ -21,6 +21,8 @@
     double nodeSize;
     
     CGRect indicatorPoint;
+    CGRect indicatorPoint2;
+
             
     NSMutableArray * nodes;
 }
@@ -46,6 +48,7 @@
 - (void) setfullcp2: (CGPoint) point;
 
 - (void) setIndicatorPoint: (CGRect) indic;
+- (void) setIndicatorPoint2: (CGRect) indic;
 
 - (bool) isInControlPoint: (CGPoint) cp atTouch: (CGPoint) touchPoint;
 

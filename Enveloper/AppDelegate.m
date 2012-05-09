@@ -268,10 +268,25 @@
 - (void)midiSource:(PGMidiSource*)themidi midiReceived:(const MIDIPacketList *)packetList{
     NSLog(@"\n\nmidiReceived count is %d\n\n", dvcArray.count);
     
+    //currmidi = themidi;
+    //currpacketList = packetList;
+    
     for (int i=0; i<[self getdvcArrayCount]; i++){
+        /*
+        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithInt:i], @"iter",
+                               nil];
+        
+        [self performSelectorInBackground:@selector(midiWrapper) withObject:args];
+        */
         DetailViewController * current = [dvcArray objectAtIndex:i];
         [current midiSource:themidi midiReceived:packetList];
     }
+}
+         
+- (void) midiWrapper: (NSDictionary *)args{
+    DetailViewController * current = [dvcArray objectAtIndex:[[args objectForKey:@"iter"] intValue]];
+    [current midiSource:currmidi midiReceived:currpacketList];
 }
 
 -(const char *)ToStringFromBool:(BOOL) b { return b ? "yes":"no"; }
@@ -338,6 +353,8 @@
 }
 
 - (Boolean) isdvc : (DetailViewController *) dvc inArrayAtIndex: (NSInteger) index {
+    if(![self getdvcAtIndex:index])
+        return false;
     DetailViewController * current = [dvcArray objectAtIndex:index];
     if([current.timeStamp isEqualToString:dvc.timeStamp])
         return true;

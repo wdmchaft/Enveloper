@@ -64,6 +64,8 @@
 
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) IBOutlet UIView *graph;
+@property (strong, nonatomic) IBOutlet UIView *disabler;
+
 @property (strong, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 @property (strong, nonatomic) IBOutlet UITextField *label;
 @property (strong, nonatomic) IBOutlet UISlider *slidr;
